@@ -1,0 +1,650 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>資產總覽</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <link rel="stylesheet" href="./assets/css/records.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import { fetchUserExchanges, saveUserExchange, deleteUserExchange, fetchBalance, fetchBalanceSummary } from "./js/api.js";
+
+    let exchanges = [];
+    const EX_LIST = ["binance", "bybit", "bitget", "okx", "bingx", "mexc", "gate"];
+
+    async function loadExchangeList() {
+      try {
+        exchanges = await fetchUserExchanges();
+      } catch (err) {
+        console.error(err);
+        exchanges = [];
+      }
+      renderSidebar();
+    }
+
+    function renderSidebar() {
+      EX_LIST.forEach(code => {
+        const el = document.getElementById(`ex-${code}`);
+        if (!el) return;
+        const dot = el.querySelector(".status-dot");
+        const found = exchanges.find(x => x.code === code);
+        if (found) {
+          dot.classList.add("bg-green-500");
+          dot.classList.remove("bg-red-500");
+        } else {
+          dot.classList.add("bg-red-500");
+          dot.classList.remove("bg-green-500");
+        }
+      });
+    }
+
+    function openDrawer(code) {
+      const found = exchanges.find(x => x.code === code);
+      document.getElementById("drawer").classList.remove("hidden");
+      document.getElementById("drawer-exchange").innerText = code;
+      document.getElementById("drawer-code").value = code;
+      document.getElementById("drawer-api-key").value = found?.api_key || "";
+      document.getElementById("drawer-api-secret").value = found?.api_secret || "";
+      document.getElementById("drawer-passphrase").value = found?.passphrase || "";
+      document.getElementById("drawer-delete").classList.toggle("hidden", !found);
+    }
+
+    async function saveDrawer() {
+      const payload = {
+        code: document.getElementById("drawer-code").value,
+        api_key: document.getElementById("drawer-api-key").value,
+        api_secret: document.getElementById("drawer-api-secret").value,
+        passphrase: document.getElementById("drawer-passphrase").value
+      };
+      try {
+        await saveUserExchange(payload);
+        alert("已儲存交易所 API");
+        document.getElementById("drawer").classList.add("hidden");
+        loadExchangeList();
+      } catch (err) {
+        console.error(err);
+        alert("儲存失敗，請稍後再試");
+      }
+    }
+
+    async function deleteDrawer() {
+      const code = document.getElementById("drawer-code").value;
+      const found = exchanges.find(x => x.code === code);
+      if (found) {
+        try {
+          await deleteUserExchange(found.id);
+          alert("已刪除 API");
+        } catch (err) {
+          console.error(err);
+          alert("刪除失敗，請稍後再試");
+        }
+      }
+      document.getElementById("drawer").classList.add("hidden");
+      loadExchangeList();
+    }
+
+    let pieChart = null;
+    let assetHistory = [];
+
+    async function loadBalance() {
+      const list = ["binance", "bybit", "bitget", "okx", "bingx", "mexc", "gate"];
+      for (const ex of list) {
+        try {
+          const data = await fetchBalance(ex);
+          const card = document.getElementById(`card-${ex}`);
+          if (!card) continue;
+          const valueEl = card.querySelector(".balance-value");
+          if (data.success) {
+            valueEl.innerText = `${Number(data.totalUSDT || 0).toFixed(2)} USDT`;
+          } else {
+            valueEl.innerText = "--";
+          }
+        } catch (err) {
+          console.error(err);
+          const card = document.getElementById(`card-${ex}`);
+          card?.querySelector(".balance-value")?.innerText = "--";
+        }
+      }
+    }
+
+    async function loadPortfolioSummary() {
+      try {
+        const summary = await fetchBalanceSummary();
+        document.getElementById("portfolio-total").innerText = `${summary.total.toFixed(2)} USDT`;
+        const labels = Object.keys(summary.exchanges || {});
+        const values = Object.values(summary.exchanges || {});
+        updatePieChart(labels, values);
+        updateAssetCurve(summary);
+      } catch (err) {
+        console.error(err);
+        document.getElementById("portfolio-total").innerText = "--";
+      }
+    }
+
+    function updatePieChart(labels, values) {
+      const canvas = document.getElementById("pie-chart");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      if (pieChart) pieChart.destroy();
+      pieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels,
+          datasets: [
+            {
+              data: values,
+              backgroundColor: [
+                "#4F46E5",
+                "#10B981",
+                "#F59E0B",
+                "#EF4444",
+                "#3B82F6",
+                "#6B7280",
+                "#A78BFA"
+              ]
+            }
+          ]
+        },
+        options: {
+          plugins: {
+            legend: { position: "bottom" }
+          }
+        }
+      });
+    }
+
+    function updateAssetCurve(summary) {
+      const now = new Date();
+      assetHistory.push({ t: now, v: summary.total || 0 });
+      if (assetHistory.length > 200) assetHistory.shift();
+      drawCurve(assetHistory);
+    }
+
+    function drawCurve(hist) {
+      const svg = document.getElementById("asset-trend");
+      if (!svg || !hist.length) return;
+      const values = hist.map(h => h.v);
+      const max = Math.max(...values);
+      const min = Math.min(...values);
+      const points = hist
+        .map((h, i) => {
+          const x = (i / Math.max(hist.length - 1, 1)) * 100;
+          const y = 100 - ((h.v - min) / (max - min + 1)) * 100;
+          return `${x},${y}`;
+        })
+        .join(" ");
+      svg.innerHTML = `<polyline fill="none" stroke="#4F46E5" stroke-width="2" points="${points}" />`;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadExchangeList();
+      loadPortfolioSummary();
+    });
+    window.openDrawer = openDrawer;
+    window.saveDrawer = saveDrawer;
+    window.deleteDrawer = deleteDrawer;
+  </script>
+</head>
+
+<body class="bg-white text-black">
+  <aside class="w-64 px-6 py-8 flex flex-col border-r border-gray-200 fixed inset-y-0 bg-white z-20">
+    <div class="flex-1">
+      <div class="w-28 h-28 border border-gray-300 rounded-full mx-auto mb-2 overflow-hidden cursor-pointer" id="avatar-box">
+        <img id="user-avatar" src="" alt="使用者頭像" class="w-full h-full object-cover" />
+        <input id="avatar-input" type="file" accept="image/*" class="hidden" />
+      </div>
+      <div id="user-name" class="text-center font-semibold tracking-wide">user</div>
+      <div id="user-uid" class="text-center text-xs text-gray-500 mb-6">UID : 100001</div>
+      <div class="border border-gray-300 rounded-2xl px-4 py-3 mb-6 space-y-1">
+        <div id="ex-binance" class="flex items-center justify-between py-1 cursor-pointer" onclick="openDrawer('binance')">
+          <span class="text-sm">binance</span>
+          <span class="status-dot w-3 h-3 rounded-full bg-red-500"></span>
+        </div>
+        <div id="ex-bybit" class="flex items-center justify-between py-1 cursor-pointer" onclick="openDrawer('bybit')">
+          <span class="text-sm">bybit</span>
+          <span class="status-dot w-3 h-3 rounded-full bg-red-500"></span>
+        </div>
+        <div id="ex-bitget" class="flex items-center justify-between py-1 cursor-pointer" onclick="openDrawer('bitget')">
+          <span class="text-sm">bitget</span>
+          <span class="status-dot w-3 h-3 rounded-full bg-red-500"></span>
+        </div>
+        <button onclick="openDrawer('binance')" class="mt-3 w-full border border-gray-300 rounded-xl text-sm py-1 hover:bg-gray-100 transition">
+          +
+        </button>
+      </div>
+    </div>
+    <div>
+      <button id="quick-add-btn" class="w-full border border-gray-300 rounded-xl py-2 text-sm hover:bg-gray-100 transition">
+        快速建立
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-air ml-64 p-10">
+    <section class="page-heading">
+      <div class="heading-tabs">
+        <a class="heading-link" href="index.html">儀表板</a>
+        <span class="heading-divider">/</span>
+        <a class="heading-link active" href="portfolio.html">資產</a>
+      </div>
+    </section>
+
+    <section class="portfolio-summary">
+      <div class="summary-card summary-main">
+        <div class="summary-card-head">
+          <span class="summary-label" data-translate="assetOverview">資產總覽</span>
+          <span class="summary-subtext" id="summary-date">--/--</span>
+        </div>
+        <div class="summary-value" id="total-usdt">0 USDT</div>
+        <div id="portfolio-total" class="text-2xl font-bold mt-2">--</div>
+        <div class="summary-subvalue" id="total-twd">≈ 0 TWD</div>
+        <div class="summary-meta">
+          <div>
+            <span data-translate="change24h">24h 漲跌</span>
+            <strong id="today-pnl">0%</strong>
+          </div>
+          <div>
+            <span data-translate="holdingTypes">持倉總值</span>
+            <strong id="summary-holdings">0 USDT</strong>
+          </div>
+        </div>
+      </div>
+        <div class="summary-card">
+        <span class="summary-label" data-translate="change24h">24h 波動</span>
+        <div class="summary-mini" id="summary-24h">0 USDT</div>
+        <p class="summary-note" id="summary-24h-rate">0%</p>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label" data-translate="updated">昨日差異</span>
+        <div class="summary-mini" id="summary-yesterday">0 USDT</div>
+        <p class="summary-note" data-translate="yesterday">昨日</p>
+      </div>
+    </section>
+
+    <section class="portfolio-analytics">
+      <div class="analytics-card asset-curve-card">
+        <div class="hero-chart-head">
+          <span class="hero-chart-label" data-translate="assetCurve">資產曲線</span>
+          <div class="hero-chart-controls segmented-control">
+            <button class="asset-range-btn" data-range="1">1D</button>
+            <button class="asset-range-btn" data-range="7">1W</button>
+            <button class="asset-range-btn" data-range="30">1M</button>
+            <button class="asset-range-btn" data-range="90">3M</button>
+          </div>
+        </div>
+        <div class="asset-curve-body">
+          <svg id="asset-trend" viewBox="0 0 320 240" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="asset-curve-gradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#6AAEFF" stop-opacity="0.35"></stop>
+                <stop offset="100%" stop-color="#6AAEFF" stop-opacity="0.05"></stop>
+              </linearGradient>
+            </defs>
+            <g class="grid-lines"></g>
+            <path id="asset-trend-fill" fill="url(#asset-curve-gradient)" opacity="0.9"></path>
+            <path id="asset-trend-path" fill="none"></path>
+            <rect id="asset-curve-hit" class="curve-hitbox" width="320" height="240"></rect>
+          </svg>
+          <div id="asset-curve-tooltip" class="asset-curve-tooltip hidden"></div>
+          <div id="asset-curve-empty" class="asset-curve-empty hidden">資料蒐集中，稍後即會顯示</div>
+        </div>
+        <div class="asset-curve-axis" id="asset-curve-axis"></div>
+        <div class="asset-curve-footer">
+          <span id="curve-min" class="asset-curve-min">最低：0</span>
+          <span id="curve-max" class="asset-curve-max">最高：0</span>
+        </div>
+      </div>
+      <div class="analytics-card breakdown-card">
+        <div class="analytics-title" data-translate="assetDistribution">資產配置</div>
+        <div class="portfolio-pie-wrap">
+          <svg id="portfolio-pie" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="70" stroke="#E6E6E6" stroke-width="18" fill="none" />
+          </svg>
+          <div class="portfolio-pie-center">
+            <div id="pie-total" class="pie-value">0</div>
+            <div class="pie-label">USDT</div>
+          </div>
+        </div>
+        <ul id="portfolio-legend" class="portfolio-legend"></ul>
+      </div>
+      <div class="analytics-card indicator-card">
+        <div class="analytics-title" data-translate="assetIndicators">資產指標</div>
+        <div id="portfolio-stats" class="portfolio-stats"></div>
+      </div>
+    </section>
+
+    <section class="portfolio-exchanges">
+      <div class="section-header">
+        <h2 class="section-title" data-translate="connectedExchanges">已連接交易所</h2>
+      </div>
+      <div id="portfolio-exchange-cards" class="portfolio-card-grid">
+        <div id="card-binance" class="portfolio-exchange-card">
+          <div class="card-head">Binance</div>
+          <div class="balance-value text-lg font-bold">--</div>
+          <div class="text-xs text-gray-500">實時餘額</div>
+        </div>
+        <div id="card-bybit" class="portfolio-exchange-card">
+          <div class="card-head">Bybit</div>
+          <div class="balance-value text-lg font-bold">--</div>
+          <div class="text-xs text-gray-500">實時餘額</div>
+        </div>
+        <div id="card-bitget" class="portfolio-exchange-card">
+          <div class="card-head">Bitget</div>
+          <div class="balance-value text-lg font-bold">--</div>
+          <div class="text-xs text-gray-500">實時餘額</div>
+        </div>
+        <div id="card-okx" class="portfolio-exchange-card">
+          <div class="card-head">OKX</div>
+          <div class="balance-value text-lg font-bold">--</div>
+          <div class="text-xs text-gray-500">實時餘額</div>
+        </div>
+        <div id="card-bingx" class="portfolio-exchange-card">
+          <div class="card-head">BingX</div>
+          <div class="balance-value text-lg font-bold">--</div>
+          <div class="text-xs text-gray-500">實時餘額</div>
+        </div>
+        <div id="card-mexc" class="portfolio-exchange-card">
+          <div class="card-head">MEXC</div>
+          <div class="balance-value text-lg font-bold">--</div>
+          <div class="text-xs text-gray-500">實時餘額</div>
+        </div>
+        <div id="card-gate" class="portfolio-exchange-card">
+          <div class="card-head">Gate.io</div>
+          <div class="balance-value text-lg font-bold">--</div>
+          <div class="text-xs text-gray-500">實時餘額</div>
+        </div>
+        <div class="portfolio-pie-card">
+          <canvas id="pie-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="portfolio-holdings">
+      <div class="section-header">
+        <h2 class="section-title" data-translate="holdings">持倉列表</h2>
+      </div>
+      <div class="holdings-card">
+        <table class="portfolio-table">
+          <thead>
+            <tr>
+              <th>幣種</th>
+              <th>數量</th>
+              <th>現價</th>
+              <th>總價值</th>
+              <th>佔比</th>
+            </tr>
+          </thead>
+          <tbody id="portfolio-holdings"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="record-modal-bg" class="fixed inset-0 bg-black/30 hidden z-[80] flex items-center justify-center">
+    <div id="record-modal" class="w-full max-w-5xl bg-white border border-gray-200 rounded-2xl shadow-2xl p-8 space-y-8">
+      <div class="flex justify-between items-center">
+        <div>
+          <div class="text-xl font-semibold">快速建立交易紀錄</div>
+          <p class="text-sm text-gray-500">資料將同步於儀表板與資產頁</p>
+        </div>
+        <button id="record-close" class="text-xl text-gray-500 hover:text-gray-800" aria-label="關閉">×</button>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="space-y-8">
+          <div id="record-image-area" class="border border-gray-200 rounded-2xl h-60 flex flex-col items-center justify-center gap-2 text-gray-400 cursor-pointer hover:bg-gray-50">
+            <span id="record-image-placeholder">點擊上傳圖片（選填）</span>
+            <img id="record-image-preview" class="max-h-full max-w-full hidden" />
+            <input id="record-image-input" type="file" accept="image/*" class="hidden" />
+          </div>
+          <div class="space-y-4">
+            <div class="form-group">
+              <label class="block text-sm text-gray-600">幣種</label>
+              <input id="record-symbol" class="record-input" placeholder="例如 BTC" />
+            </div>
+            <div class="form-group">
+              <label class="block text-sm text-gray-600">時間</label>
+              <input id="record-date" type="date" class="record-input" />
+            </div>
+            <div class="form-grid">
+              <div>
+                <label class="block text-sm text-gray-600">方向</label>
+                <select id="record-side" class="record-input">
+                  <option value="">選擇方向</option>
+                  <option value="long">做多</option>
+                  <option value="short">做空</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-gray-600">結果</label>
+                <select id="record-result" class="record-input">
+                  <option value="">選擇結果</option>
+                  <option value="win">止盈</option>
+                  <option value="loss">止損</option>
+                  <option value="exit">提前出場</option>
+                  <option value="open">持倉中</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="block text-sm text-gray-600">盈虧（USDT）</label>
+              <input id="record-pnl" class="record-input" placeholder="輸入盈虧金額" />
+            </div>
+            <div class="form-group">
+              <label class="block text-sm text-gray-600">摘要</label>
+              <textarea id="record-summary" class="record-input h-20" placeholder="描述策略、原因"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-8">
+          <div>
+            <div class="text-sm text-gray-600 mb-2">標籤</div>
+            <div id="record-tag-chips" class="flex flex-wrap gap-2"></div>
+            <div class="flex gap-2 mt-4">
+              <input id="tag-edit-input" class="record-input flex-1" placeholder="新增標籤" />
+              <button id="tag-edit-add" class="px-4 py-2 bg-black text-white rounded-xl text-sm hover:bg-gray-800">新增</button>
+            </div>
+            <div id="tag-edit-list" class="flex flex-wrap gap-2 mt-2 text-xs text-gray-600"></div>
+          </div>
+          <div id="record-extra-fields" class="space-y-3"></div>
+        </div>
+      </div>
+      <div class="flex justify-end gap-4 pt-4 border-t border-gray-100">
+        <button id="record-cancel" class="px-6 py-2 border border-gray-300 rounded-xl text-sm hover:bg-gray-100">取消</button>
+        <button id="record-submit" class="px-6 py-2 bg-black text-white rounded-xl text-sm hover:bg-gray-800">建立</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="detail-bg" class="fixed inset-0 bg-black/30 hidden z-[80] flex items-center justify-center">
+    <div id="detail-panel" class="w-full max-w-4xl bg-white border border-gray-200 rounded-2xl shadow-2xl p-8 space-y-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <div class="text-xl font-semibold">紀錄詳情</div>
+          <p class="text-sm text-gray-500">編輯後按保存即可同步</p>
+        </div>
+        <button id="detail-close" class="text-lg text-gray-500 hover:text-gray-800" aria-label="關閉">×</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">幣種</label>
+          <input id="detail-symbol" class="record-input" disabled />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">時間</label>
+          <input id="detail-date" type="date" class="record-input" disabled />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">方向</label>
+          <select id="detail-side" class="record-input" disabled>
+            <option value="">選擇方向</option>
+            <option value="long">做多</option>
+            <option value="short">做空</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">結果</label>
+          <select id="detail-result" class="record-input" disabled>
+            <option value="">選擇結果</option>
+            <option value="win">止盈</option>
+            <option value="loss">止損</option>
+            <option value="exit">提前出場</option>
+            <option value="open">持倉中</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">盈虧</label>
+          <input id="detail-pnl" class="record-input" disabled />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">摘要</label>
+          <textarea id="detail-summary" class="record-input h-20" disabled></textarea>
+        </div>
+      </div>
+      <div class="space-y-3" id="detail-extra-fields"></div>
+      <div class="flex justify-between items-center gap-4">
+        <button id="detail-edit" class="px-5 py-2 border border-gray-300 rounded-xl hover:bg-gray-100">編輯</button>
+        <div class="flex items-center gap-3">
+          <button id="detail-delete" class="px-4 py-2 border border-red-300 text-red-600 rounded-xl hover:bg-red-50">刪除</button>
+          <button id="detail-save" class="px-5 py-2 bg-black text-white rounded-xl hover:bg-gray-800 hidden">保存</button>
+          <button id="detail-cancel" class="px-5 py-2 border border-gray-300 rounded-xl hover:bg-gray-100 hidden">取消</button>
+        </div>
+      </div>
+      <div class="text-xs text-gray-400" id="detail-id"></div>
+    </div>
+  </div>
+
+  <div id="delete-dialog-bg" class="fixed inset-0 bg-black bg-opacity-40 hidden z-[80] flex items-center justify-center">
+    <div id="delete-dialog" class="bg-white rounded-xl shadow-2xl p-6 w-80">
+      <h3 class="text-lg font-semibold mb-4">確認刪除紀錄</h3>
+      <p class="text-sm text-gray-600 mb-6">此操作無法復原。</p>
+      <div class="flex justify-end gap-3">
+        <button id="delete-cancel" class="px-4 py-2 border border-gray-300 rounded-xl hover:bg-gray-100">取消</button>
+        <button id="delete-confirm" class="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700">刪除</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="exchange-picker-bg" class="fixed inset-0 bg-black bg-opacity-30 hidden flex items-center justify-center z-40" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="bg-white w-full max-w-4xl rounded-2xl border border-gray-200 p-8 shadow-2xl space-y-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <div class="text-xl font-semibold">選擇交易所</div>
+          <p class="text-sm text-gray-500">已支援 Binance、Bybit、Bitget 等</p>
+        </div>
+        <button id="exchange-picker-close" class="text-lg text-gray-500 hover:text-gray-800" aria-label="關閉">×</button>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="exchange-card" data-ex="binance">
+          <img src="./assets/img/binance.png" alt="Binance" class="exchange-picker-logo" />
+          <div class="text-center text-sm font-medium">Binance</div>
+        </div>
+        <div class="exchange-card" data-ex="bybit">
+          <img src="./assets/img/bybit.png" alt="Bybit" class="exchange-picker-logo" />
+          <div class="text-center text-sm font-medium">Bybit</div>
+        </div>
+        <div class="exchange-card" data-ex="bitget">
+          <img src="./assets/img/bitget.png" alt="Bitget" class="exchange-picker-logo" />
+          <div class="text-center text-sm font-medium">Bitget</div>
+        </div>
+        <div class="exchange-card" data-ex="okx">
+          <img src="./assets/img/okx.png" alt="OKX" class="exchange-picker-logo" />
+          <div class="text-center text-sm font-medium">OKX</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="api-modal-bg" class="fixed inset-0 bg-black bg-opacity-30 hidden z-[80] flex items-center justify-center">
+    <div class="bg-white w-full max-w-md rounded-2xl border border-gray-200 shadow-2xl p-8 space-y-5">
+      <div class="flex justify-between items-center">
+        <div class="text-lg font-semibold" id="api-modal-title">連接交易所</div>
+        <button id="api-modal-close" class="text-lg text-gray-500 hover:text-gray-800" aria-label="關閉">×</button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">API Key</label>
+          <input id="exchange-key" class="record-input" placeholder="輸入 API Key" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Secret Key</label>
+          <input id="exchange-secret" class="record-input" placeholder="輸入 Secret Key" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Passphrase</label>
+          <input id="exchange-passphrase" class="record-input" placeholder="選填" />
+        </div>
+      </div>
+      <div class="flex justify-end gap-3">
+        <button id="api-cancel" class="px-4 py-2 border border-gray-300 rounded-xl hover:bg-gray-100">取消</button>
+        <button id="api-save" class="px-4 py-2 bg-black text-white rounded-xl hover:bg-gray-800">儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="profile-modal" class="fixed inset-0 bg-black/30 hidden z-[90] flex items-center justify-center">
+    <div class="bg-white w-full max-w-lg border border-gray-200 rounded-2xl shadow-2xl p-8 space-y-6">
+      <div class="flex justify-between items-start">
+        <div class="text-xl font-semibold">個人資料</div>
+        <button id="profile-close" class="text-2xl text-gray-500 hover:text-gray-800" aria-label="關閉">×</button>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="w-20 h-20 rounded-full overflow-hidden border border-gray-300 cursor-pointer" id="profile-avatar-box">
+          <img id="profile-avatar" src="" class="w-full h-full object-cover" alt="使用者頭像" />
+        </div>
+        <div>
+          <div class="font-medium text-lg" id="profile-nick"></div>
+          <input id="profile-name-input" type="text" class="hidden mt-2 border border-gray-300 rounded-xl px-3 py-2 text-sm" />
+          <div class="text-sm text-gray-500">UID：<span id="profile-uid">100001</span></div>
+          <button id="profile-edit" class="mt-3 px-3 py-1 border border-gray-300 rounded-xl text-sm hover:bg-gray-100">編輯暱稱</button>
+        </div>
+      </div>
+      <div class="space-y-3">
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-gray-600">Telegram</span>
+          <button id="profile-tg" class="px-3 py-1 text-sm border border-gray-300 rounded-xl hover:bg-gray-100">綁定</button>
+          <span id="profile-tg-status" class="text-sm text-green-600 hidden">已綁定：<span id="profile-tg-account"></span></span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-gray-600">Google</span>
+          <button id="profile-google" class="px-3 py-1 text-sm border border-gray-300 rounded-xl hover:bg-gray-100">綁定</button>
+          <span id="profile-google-status" class="text-sm text-green-600 hidden">已綁定：<span id="profile-google-account"></span></span>
+        </div>
+      </div>
+      <div>
+        <div class="text-sm text-gray-600 mb-2">已連接交易所</div>
+        <div id="profile-exchanges" class="space-y-2 text-sm text-gray-700"></div>
+      </div>
+      <button id="profile-logout" class="mt-2 w-full py-2 border border-red-300 text-red-600 rounded-xl text-sm hover:bg-red-50">登出</button>
+    </div>
+  </div>
+
+  <div id="spa-root" class="hidden">
+    <main id="app"></main>
+  </div>
+
+  <div id="drawer" class="hidden fixed inset-0 bg-black/40 z-50 flex justify-end">
+    <div class="w-80 bg-white h-full p-6 flex flex-col">
+      <h2 class="text-lg font-semibold mb-4">設定 API — <span id="drawer-exchange"></span></h2>
+      <input id="drawer-code" type="hidden">
+      <label class="text-sm mb-1">API Key</label>
+      <input id="drawer-api-key" class="border rounded px-3 py-2 mb-3 w-full">
+      <label class="text-sm mb-1">Secret Key</label>
+      <input id="drawer-api-secret" class="border rounded px-3 py-2 mb-3 w-full">
+      <label class="text-sm mb-1">Passphrase</label>
+      <input id="drawer-passphrase" class="border rounded px-3 py-2 mb-3 w-full">
+      <button onclick="saveDrawer()" class="bg-black text-white rounded py-2 mt-2">儲存</button>
+      <button id="drawer-delete" onclick="deleteDrawer()" class="text-red-600 mt-4 underline">刪除此交易所</button>
+      <button onclick="document.getElementById('drawer').classList.add('hidden')" class="mt-auto text-gray-500 underline">關閉</button>
+    </div>
+  </div>
+  <script type="module" src="./assets/js/records.js"></script>
+  <script type="module" src="./js/main.js"></script>
+  <script type="module" src="./js/modules/portfolio.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>?啣?鈭斗?</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-white text-black">
+  <div class="min-h-screen flex">
+
+    <!-- 撌血?湔?嚗??嗡????湛? -->
+    <aside class="w-64 px-6 py-8 flex flex-col border-r border-gray-200">
+      <div>
+        <div class="w-28 h-28 border border-gray-300 rounded-full mx-auto mb-4"></div>
+        <div class="text-center font-semibold tracking-wide mb-8">NAME</div>
+
+        <div class="border border-gray-300 rounded-2xl px-4 py-3 mb-6">
+          <div class="flex items-center justify-between py-1">
+            <span class="text-sm">binance</span>
+            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+          </div>
+          <div class="flex items-center justify-between py-1 border-t border-gray-200">
+            <span class="text-sm">bybit</span>
+            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+          </div>
+          <div class="flex items-center justify-between py-1 border-t border-gray-200">
+            <span class="text-sm">bitget</span>
+            <span class="w-3 h-3 rounded-full bg-red-500"></span>
+          </div>
+
+          <div class="text-center text-xs text-gray-400 mt-2 mb-1">......</div>
+
+          <button
+            class="mt-1 w-full border border-gray-300 rounded-xl text-sm py-1 hover:bg-gray-100 transition">
+            +
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-auto">
+        <a href="add.html">
+          <button
+            class="w-full border border-gray-300 rounded-xl py-2 text-sm hover:bg-gray-100 transition">
+            敹恍遣蝡?
+          </button>
+        </a>
+      </div>
+    </aside>
+
+    <!-- 銝餃摰?-->
+    <main class="flex-1 px-10 py-8">
+
+      <!-- ?璅? -->
+      <header class="flex justify-between items-center mb-8">
+        <div>
+          <h1 class="text-xl font-semibold tracking-wide mb-1">?啣?鈭斗?</h1>
+          <p class="text-xs text-gray-500">憛怠神銝蝑?漱????/p>
+        </div>
+
+        <a href="records.html"
+           class="text-xs text-gray-500 underline hover:text-gray-700">
+          ??餈?蝝??銵?
+        </a>
+      </header>
+
+      <!-- 銵典 -->
+      <form class="max-w-xl">
+
+        <!-- ?交??? -->
+        <div class="mb-5">
+          <label class="block text-sm mb-1">?交???</label>
+          <input type="datetime-local"
+                 class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <!-- 鈭斗?? -->
+        <div class="mb-5">
+          <label class="block text-sm mb-1">鈭斗??</label>
+          <select class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white">
+            <option>binance</option>
+            <option>bybit</option>
+            <option>bitget</option>
+          </select>
+        </div>
+
+        <!-- 撟?車 -->
+        <div class="mb-5">
+          <label class="block text-sm mb-1">撟?車</label>
+          <input type="text"
+                 placeholder="憒?BTC / ETH / SOL"
+                 class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <!-- ?孵? -->
+        <div class="mb-5">
+          <label class="block text-sm mb-1">?孵?</label>
+          <select class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white">
+            <option>憭</option>
+            <option>蝛箏</option>
+          </select>
+        </div>
+
+        <!-- 瑽▼ -->
+        <div class="mb-5">
+          <label class="block text-sm mb-1">瑽▼</label>
+          <input type="number"
+                 placeholder="憒?10"
+                 class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <!-- 靽???-->
+        <div class="mb-5">
+          <label class="block text-sm mb-1">靽???USDT嚗?/label>
+          <input type="number"
+                 placeholder="憒?100"
+                 class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <!-- ? USDT -->
+        <div class="mb-5">
+          <label class="block text-sm mb-1">?嚗SDT嚗?/label>
+          <input type="number"
+                 placeholder="憒?+24.5 / -7.8"
+                 class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <!-- ???-->
+        <div class="mb-5">
+          <label class="block text-sm mb-1">???%嚗?/label>
+          <input type="number"
+                 placeholder="憒?12.4 / -3.8"
+                 class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <!-- ?酉 -->
+        <div class="mb-5">
+          <label class="block text-sm mb-1">?酉</label>
+          <textarea placeholder="頛詨雿?鈭斗?蝝??閮?
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm h-24"></textarea>
+        </div>
+
+        <!-- 銝?? -->
+        <div class="mb-8">
+          <label class="block text-sm mb-1">銝?芸?嚗憛恬?</label>
+          <input type="file" class="text-sm" />
+        </div>
+
+        <!-- ?? -->
+        <div class="flex gap-4">
+          <button type="button"
+                  class="px-6 py-2 border border-gray-300 rounded-xl text-sm hover:bg-gray-100 transition">
+            ??
+          </button>
+
+          <button type="submit"
+                  class="px-6 py-2 bg-black text-white rounded-xl text-sm hover:bg-gray-800 transition">
+            撱箇?
+          </button>
+        </div>
+
+      </form>
+
+    </main>
+  </div>
+</body>
+</html>
