@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>登入 Dashboard</title>
+
   <style>
     body {
       margin: 0;
@@ -36,6 +37,7 @@
 </head>
 
 <body>
+
   <div class="box">
     <h1 style="margin-bottom:8px;">Dashboard</h1>
     <p class="subtitle">使用 Google 帳戶快速登入</p>
@@ -43,15 +45,15 @@
     <div id="google-signin"></div>
 
     <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px; align-items: center;">
-      <div id="telegram-login-box"></div>
-      <small style="font-size: 12px; color: #9ca3af;">
-        也可以使用 Telegram 一鍵登入
-      </small>
+      <div id="telegram-login-box">載入 Telegram 登入中…</div>
+      <small style="font-size: 12px; color: #9ca3af;">也可以使用 Telegram 一鍵登入</small>
     </div>
 
     <div id="login-message"></div>
   </div>
 
+
+  <!-- main login script -->
   <script type="module">
     import { apiPostJson } from "./js/api.js";
 
@@ -59,114 +61,77 @@
       "777320476444-89anlckf3uipogs3h9isg4tkr347ap6u.apps.googleusercontent.com";
 
     const messageEl = document.getElementById("login-message");
-    const params = new URLSearchParams(window.location.search);
-    const err = params.get("error");
-
-    let domReady = false;
-    let googleReady = false;
-    let googleInitialized = false;
 
     function setMessage(text, type = "info") {
-      if (!messageEl) return;
       messageEl.textContent = text;
       messageEl.style.color = type === "error" ? "#dc2626" : "#16a34a";
     }
 
-    if (err && messageEl) {
-      let text = "登入失敗，請再試一次";
-      if (err === "telegram_expired") text = "Telegram 登入連結已過期，請重新登入";
-      if (err === "telegram_invalid_hash") text = "Telegram 回傳驗證失敗，請重新登入";
-      if (err === "telegram_invalid") text = "收到的 Telegram 資料格式錯誤";
-      if (err === "telegram_config") text = "伺服器尚未正確設定 Telegram Login";
-      if (err === "telegram_error") text = "Telegram 登入發生錯誤，請稍後再試";
-
-      setMessage(text, "error");
-
-      params.delete("error");
-      const cleanUrl = `${window.location.pathname}${
-        params.toString() ? "?" + params.toString() : ""
-      }`;
-      window.history.replaceState({}, "", cleanUrl);
-    }
-
-    async function handleLoginResponse(idToken) {
+    // Google callback
+    window.handleCredentialResponse = async (response) => {
       try {
         setMessage("登入中...", "info");
-        const data = await apiPostJson("/auth/google", { idToken });
-
-        const profile = {
-          username: data.user?.email?.split("@")[0] || "user",
-          email: data.user?.email,
-          uid: data.user?.id,
-          googleId: data.user?.google_id,
-        };
+        const data = await apiPostJson("/auth/google", { idToken: response.credential });
 
         localStorage.setItem("token", data.token);
-        localStorage.setItem("authUser", JSON.stringify(profile));
+        localStorage.setItem("authUser", JSON.stringify(data.user));
         window.location.href = "index.html";
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error(err);
         setMessage("Google 登入失敗，請稍後再試", "error");
       }
-    }
-
-    function handleCredentialResponse(response) {
-      if (response && response.credential) {
-        handleLoginResponse(response.credential);
-      }
-    }
-
-    window.handleCredentialResponse = handleCredentialResponse;
-
-    function tryInitGoogle() {
-      if (!domReady || !googleReady || googleInitialized) return;
-      if (!window.google?.accounts?.id) return;
-
-      window.google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse,
-      });
-
-      window.google.accounts.id.renderButton(
-        document.getElementById("google-signin"),
-        { theme: "outline", size: "large" }
-      );
-
-      window.google.accounts.id.prompt();
-      googleInitialized = true;
-    }
-
-    window.handleGoogleScriptLoaded = () => {
-      googleReady = true;
-      tryInitGoogle();
     };
 
-    document.addEventListener("DOMContentLoaded", () => {
-      domReady = true;
-      const tgBox = document.getElementById("telegram-login-box");
-      if (tgBox) tgBox.textContent = "載入 Telegram 登入中…";
-      tryInitGoogle();
+    // Telegram callback
+    window.handleTelegramAuth = async function (user) {
+      try {
+        setMessage("登入中...", "info");
+        const data = await apiPostJson("/auth/telegram", user);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("authUser", JSON.stringify(data.user));
+        window.location.href = "index.html";
+      } catch (err) {
+        console.error(err);
+        setMessage("Telegram 登入失敗，請稍後再試", "error");
+      }
+    };
+  </script>
+
+  <!-- Load Google script once -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- Render Google button when Google is ready -->
+  <script>
+    window.addEventListener("load", () => {
+      const interval = setInterval(() => {
+        if (window.google?.accounts?.id) {
+          google.accounts.id.initialize({
+            client_id: "777320476444-89anlckf3uipogs3h9isg4tkr347ap6u.apps.googleusercontent.com",
+            callback: window.handleCredentialResponse
+          });
+
+          google.accounts.id.renderButton(
+            document.getElementById("google-signin"),
+            { theme: "outline", size: "large" }
+          );
+
+          clearInterval(interval);
+        }
+      }, 100);
     });
   </script>
 
-  <script
-    async
-    src="https://telegram.org/js/telegram-widget.js?21"
+  <!-- Telegram Widget -->
+  <script async src="https://telegram.org/js/telegram-widget.js?21"
     data-telegram-login="loginyiranbot"
+    data-container="telegram-login-box"
     data-size="large"
     data-radius="8"
-    data-auth-url="https://trading-app-backend-production-3b40.up.railway.app/auth/telegram"
     data-userpic="true"
     data-request-access="write"
     data-lang="zh-hant"
-    data-container="telegram-login-box">
+    data-auth-url="https://trading-app-backend-production-3b40.up.railway.app/auth/telegram">
   </script>
 
-  <script
-    src="https://accounts.google.com/gsi/client"
-    async
-    defer
-    onload="window.handleGoogleScriptLoaded && window.handleGoogleScriptLoaded()">
-  </script>
 </body>
 </html>
