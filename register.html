@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>註冊 Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f5f5f5;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #111827;
+    }
+    .card {
+      width: min(420px, 94vw);
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+      padding: 42px 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .title {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .subtitle {
+      margin: 0;
+      font-size: 14px;
+      text-align: center;
+      color: #6b7280;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #4b5563;
+    }
+    .input,
+    .select {
+      height: 48px;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      background: #fff;
+      box-sizing: border-box;
+    }
+    .gender-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 14px;
+      color: #374151;
+    }
+    .gender-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+    }
+    .gender-row select {
+      width: 140px;
+      display: none;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #374151;
+    }
+    .btn {
+      width: 100%;
+      height: 48px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      background: #111827;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s ease;
+    }
+    .btn:hover { background: #0c111b; }
+    #register-message {
+      min-height: 18px;
+      text-align: center;
+      font-size: 13px;
+    }
+    .toggle-link {
+      text-align: center;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .toggle-link a {
+      color: #111827;
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p class="subtitle">建立你的專屬帳號</p>
+    <h1 class="title">註冊</h1>
+
+    <div class="form-group">
+      <label for="reg-username">用戶名</label>
+      <input id="reg-username" class="input" type="text" placeholder="輸入用戶名">
+    </div>
+    <div class="form-group">
+      <label for="reg-email">電子郵件</label>
+      <input id="reg-email" class="input" type="email" placeholder="name@example.com">
+    </div>
+    <div class="form-group">
+      <label for="reg-password">密碼</label>
+      <input id="reg-password" class="input" type="password" placeholder="輸入密碼">
+    </div>
+    <div class="form-group">
+      <label for="reg-password2">再次輸入密碼</label>
+      <input id="reg-password2" class="input" type="password" placeholder="再次確認密碼">
+    </div>
+    <div class="form-group">
+      <label for="reg-invite">邀請碼（可留空）</label>
+      <input id="reg-invite" class="input" type="text" placeholder="選填">
+    </div>
+    <div class="form-group">
+      <label>性別</label>
+      <div class="gender-row">
+        <label><input type="radio" name="gender" value="male" checked> 男</label>
+        <label><input type="radio" name="gender" value="female"> 女</label>
+        <label><input type="radio" name="gender" value="custom"> 自訂</label>
+        <select id="gender-custom" class="select">
+          <option value="自訂">自訂</option>
+          <option value="扶他">扶他</option>
+          <option value="男娘">男娘</option>
+          <option value="人妖">人妖</option>
+          <option value="其他">其他</option>
+        </select>
+      </div>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="adult-check">
+      <label for="adult-check">我已滿 18 歲</label>
+    </div>
+
+    <button id="register-btn" class="btn" type="button">註冊</button>
+    <div id="register-message"></div>
+
+    <div class="toggle-link">
+      已有帳號？<a href="login.html">登入</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { apiPostJson } from "./js/api.js";
+
+    const genderRadios = document.querySelectorAll("input[name='gender']");
+    const genderSelect = document.getElementById("gender-custom");
+    const messageEl = document.getElementById("register-message");
+    const registerBtn = document.getElementById("register-btn");
+
+    function setMessage(text, type = "info") {
+      messageEl.textContent = text;
+      messageEl.style.color = type === "error" ? "#dc2626" : "#16a34a";
+    }
+
+    function syncGenderSelect() {
+      const selected = document.querySelector("input[name='gender']:checked").value;
+      if (selected === "custom") {
+        genderSelect.style.display = "block";
+        genderSelect.disabled = false;
+      } else {
+        genderSelect.style.display = "none";
+        genderSelect.disabled = true;
+      }
+    }
+
+    genderRadios.forEach(radio => radio.addEventListener("change", syncGenderSelect));
+    syncGenderSelect();
+
+    registerBtn.addEventListener("click", async () => {
+      const username = document.getElementById("reg-username").value.trim();
+      const email = document.getElementById("reg-email").value.trim();
+      const password = document.getElementById("reg-password").value;
+      const password2 = document.getElementById("reg-password2").value;
+      const invite = document.getElementById("reg-invite").value.trim();
+      let genderValue = document.querySelector("input[name='gender']:checked").value;
+
+      if (genderValue === "custom") {
+        genderValue = genderSelect.value || "自訂";
+      }
+
+      if (!username || !email || !password || !password2) {
+        setMessage("請完整填寫所有欄位", "error");
+        return;
+      }
+
+      if (password !== password2) {
+        setMessage("兩次輸入的密碼不一致", "error");
+        return;
+      }
+
+      try {
+        setMessage("註冊中...", "info");
+        const data = await apiPostJson("/auth/register", {
+          username,
+          email,
+          password,
+          confirmPassword: password2,
+          invite,
+          gender: genderValue
+        });
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("authUser", JSON.stringify(data.user));
+        window.location.href = "index.html";
+      } catch (err) {
+        console.error(err);
+        setMessage("註冊失敗，請稍後再試", "error");
+      }
+    });
+  </script>
+</body>
+</html>

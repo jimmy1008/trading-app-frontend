@@ -97,7 +97,7 @@
       display: flex;
       justify-content: center;
     }
-    #telegram-login-container {
+    #telegram-login-box {
       width: 100%;
       display: flex;
       justify-content: center;
@@ -118,32 +118,31 @@
       font-weight: 600;
       cursor: pointer;
     }
-    .hidden { display: none; }
   </style>
 </head>
 <body>
   <div class="card">
-    <p class="subtitle">使用 Google 帳戶快速登入</p>
+    <p class="subtitle">使用任何方式登入 dashboard</p>
     <h1 class="title">Dashboard</h1>
 
-    <div class="form-section" id="login-section">
+    <div class="form-section">
       <div class="form-group">
         <label for="login-username">用戶名</label>
         <input id="login-username" class="input" type="text" placeholder="輸入用戶名">
       </div>
-      <div class="form-group" style="margin-bottom: 18px;">
+      <div class="form-group">
         <label for="login-password">密碼</label>
         <input id="login-password" class="input" type="password" placeholder="輸入密碼">
       </div>
-      <button class="btn" type="button">登入</button>
+      <button id="login-btn" class="btn" type="button">登入</button>
+
       <div class="divider">或使用</div>
       <div id="google-signin"></div>
-      <div style="display:flex;justify-content:center;margin-top:16px;">
-        <!-- Telegram Login 官方小工具 -->
+      <div id="telegram-login-box">
         <script async
           src="https://telegram.org/js/telegram-widget.js?22"
           data-telegram-login="loginyiranbot"
-          data-size="small"
+          data-size="medium"
           data-userpic="false"
           data-onauth="onTelegramAuth(user)"
           data-request-access="write">
@@ -152,14 +151,15 @@
     </div>
 
     <div id="login-message"></div>
-    <div class="toggle-link" id="toggle-link">
-      沒有帳號？<span>註冊</span>
+    <div class="toggle-link">
+      沒有帳號？<span><a href="register.html" style="text-decoration:none;color:inherit;">註冊</a></span>
     </div>
   </div>
 
   <script type="module">
     import { apiPostJson } from "./js/api.js";
 
+    const loginBtn = document.getElementById("login-btn");
     const messageEl = document.getElementById("login-message");
 
     function setMessage(text, type = "info") {
@@ -168,7 +168,28 @@
       messageEl.style.color = type === "error" ? "#dc2626" : "#16a34a";
     }
 
-    window.handleCredentialResponse = async function handleCredentialResponse(response) {
+    loginBtn?.addEventListener("click", async () => {
+      const username = document.getElementById("login-username").value.trim();
+      const password = document.getElementById("login-password").value;
+
+      if (!username || !password) {
+        setMessage("請輸入帳號與密碼", "error");
+        return;
+      }
+
+      try {
+        setMessage("登入中...", "info");
+        const data = await apiPostJson("/auth/login", { username, password });
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("authUser", JSON.stringify(data.user));
+        window.location.href = "index.html";
+      } catch (err) {
+        console.error(err);
+        setMessage("登入失敗，請確認帳密", "error");
+      }
+    });
+
+    window.handleCredentialResponse = async response => {
       try {
         if (!response || !response.credential) {
           throw new Error("Missing Google credential");
