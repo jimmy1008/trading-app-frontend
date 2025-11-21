@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>登入 Dashboard</title>
   <style>
+    :root {
+      color-scheme: light;
+    }
     body {
       margin: 0;
       background: #f5f5f5;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -17,20 +20,104 @@
     }
     .box {
       background: white;
-      padding: 40px 50px;
+      width: min(360px, 90vw);
       border-radius: 18px;
       box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .title {
       text-align: center;
-      width: min(360px, 90vw);
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0;
     }
     .subtitle {
+      text-align: center;
       font-size: 14px;
       color: #6b7280;
-      margin-bottom: 24px;
+      margin: 0 0 16px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group label {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .input, .select {
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #fff;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .radio-group, .checkbox-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-size: 13px;
+      color: #374151;
+    }
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      background: #111827;
+      color: white;
+      transition: background 0.2s ease;
+      width: 100%;
+    }
+    .btn:hover {
+      background: #0a0f1a;
+    }
+    .toggle-link {
+      text-align: center;
+      font-size: 13px;
+      color: #6b7280;
+      cursor: pointer;
+    }
+    .toggle-link span {
+      color: #111827;
+      font-weight: 600;
+    }
+    .divider {
+      position: relative;
+      text-align: center;
+      font-size: 12px;
+      color: #9ca3af;
+      margin: 8px 0;
+    }
+    .divider::before,
+    .divider::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: #e5e7eb;
+    }
+    .divider::before {
+      left: 0;
+    }
+    .divider::after {
+      right: 0;
     }
     #login-message {
-      margin-top: 16px;
-      font-size: 14px;
+      font-size: 13px;
+      text-align: center;
+      min-height: 18px;
     }
     #telegram-login-box {
       width: 100%;
@@ -42,25 +129,78 @@
       max-width: 100%;
       transform-origin: center;
     }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 
 <body>
-
   <div class="box">
-    <h1 style="margin-bottom:8px;">Dashboard</h1>
-    <p class="subtitle">使用 Google 帳戶快速登入</p>
+    <h1 class="title">Dashboard</h1>
+    <p class="subtitle" id="mode-subtitle">使用 Google 帳戶快速登入</p>
 
-    <div id="google-signin"></div>
+    <div id="register-section" class="form-section hidden">
+      <div class="form-group">
+        <label for="reg-username">用戶名</label>
+        <input id="reg-username" class="input" type="text" placeholder="輸入用戶名">
+      </div>
+      <div class="form-group">
+        <label for="reg-password">密碼</label>
+        <input id="reg-password" class="input" type="password" placeholder="輸入密碼">
+      </div>
+      <div class="form-group">
+        <label for="reg-password2">再次輸入密碼</label>
+        <input id="reg-password2" class="input" type="password" placeholder="再次確認密碼">
+      </div>
+      <div class="form-group">
+        <label for="reg-email">電子郵件</label>
+        <input id="reg-email" class="input" type="email" placeholder="name@example.com">
+      </div>
+      <div class="form-group">
+        <label for="reg-invite">邀請碼（可留空）</label>
+        <input id="reg-invite" class="input" type="text" placeholder="選填">
+      </div>
+      <div class="form-group">
+        <label>性別</label>
+        <div class="radio-group">
+          <label><input type="radio" name="gender" checked> 男</label>
+          <label><input type="radio" name="gender"> 女</label>
+        </div>
+        <select class="select">
+          <option>扶他</option>
+          <option>男娘</option>
+          <option>人妖</option>
+          <option>自訂</option>
+        </select>
+      </div>
+      <div class="checkbox-group">
+        <input type="checkbox" id="adult-check">
+        <label for="adult-check">我已滿 18 歲</label>
+      </div>
+      <button class="btn" type="button">註冊</button>
+    </div>
 
-    <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px; align-items: center;">
+    <div id="login-section" class="form-section">
+      <div class="form-group">
+        <label for="login-username">用戶名</label>
+        <input id="login-username" class="input" type="text" placeholder="輸入用戶名">
+      </div>
+      <div class="form-group">
+        <label for="login-password">密碼</label>
+        <input id="login-password" class="input" type="password" placeholder="輸入密碼">
+      </div>
+      <button class="btn" type="button">登入</button>
+      <div class="divider">或</div>
+      <div id="google-signin"></div>
       <div id="telegram-login-box"></div>
-      <small style="font-size: 12px; color: #9ca3af;">
-        也可以使用 Telegram 一鍵登入
-      </small>
     </div>
 
     <div id="login-message"></div>
+
+    <div class="toggle-link" id="toggle-link">
+      沒有帳號？<span>註冊</span>
+    </div>
   </div>
 
   <script type="module">
@@ -70,6 +210,32 @@
       "777320476444-89anlckf3uipogs3h9isg4tkr347ap6u.apps.googleusercontent.com";
 
     const messageEl = document.getElementById("login-message");
+    const registerSection = document.getElementById("register-section");
+    const loginSection = document.getElementById("login-section");
+    const toggleLink = document.getElementById("toggle-link");
+    const subtitleEl = document.getElementById("mode-subtitle");
+    let isRegister = false;
+
+    function updateMode() {
+      if (isRegister) {
+        registerSection.classList.remove("hidden");
+        loginSection.classList.add("hidden");
+        toggleLink.innerHTML = '已經有帳號？<span>前往登入</span>';
+        subtitleEl.textContent = "建立你的專屬帳號";
+      } else {
+        registerSection.classList.add("hidden");
+        loginSection.classList.remove("hidden");
+        toggleLink.innerHTML = '沒有帳號？<span>註冊</span>';
+        subtitleEl.textContent = "使用 Google 帳戶快速登入";
+      }
+    }
+
+    toggleLink.addEventListener("click", () => {
+      isRegister = !isRegister;
+      updateMode();
+    });
+
+    updateMode();
 
     function setMessage(text, type = "info") {
       messageEl.textContent = text;
@@ -86,6 +252,19 @@
       } catch (err) {
         console.error(err);
         setMessage("Google 登入失敗，請稍後再試", "error");
+      }
+    };
+
+    window.handleTelegramAuth = async function handleTelegramAuth(user) {
+      try {
+        setMessage("登入中...", "info");
+        const data = await apiPostJson("/auth/telegram", user);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("authUser", JSON.stringify(data.user));
+        window.location.href = "index.html";
+      } catch (err) {
+        console.error(err);
+        setMessage("Telegram 登入失敗，請稍後再試", "error");
       }
     };
   </script>
@@ -121,8 +300,8 @@
     data-auth-url="https://trading-app-backend-production-3b40.up.railway.app/auth/telegram"
     data-userpic="true"
     data-request-access="write"
-    data-lang="zh-hant">
+    data-lang="zh-hant"
+    data-onauth="handleTelegramAuth">
   </script>
-
 </body>
 </html>
