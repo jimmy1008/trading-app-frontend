@@ -53,8 +53,7 @@
       font-weight: 600;
       color: #4b5563;
     }
-    .input,
-    .select {
+    .input {
       height: 48px;
       border-radius: 12px;
       border: 1px solid #d1d5db;
@@ -63,33 +62,6 @@
       font-family: inherit;
       background: #fff;
       box-sizing: border-box;
-    }
-    .radio-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      font-size: 14px;
-      color: #374151;
-    }
-    .radio-option {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 500;
-    }
-    .custom-inline {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      color: #374151;
-      margin-top: 10px;
     }
     .btn {
       width: 100%;
@@ -120,30 +92,16 @@
       height: 1px;
       background: #e5e7eb;
     }
-    .external-auth {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    #google-signin,
-    #telegram-login {
+    #google-signin {
       width: 100%;
       display: flex;
       justify-content: center;
     }
-    .telegram-btn {
+    #telegram-login-container {
       width: 100%;
-      border: 1px solid #dbeafe;
-      background: #e0f2ff;
-      color: #0f172a;
-      border-radius: 12px;
-      padding: 12px;
       display: flex;
-      align-items: center;
       justify-content: center;
-      gap: 10px;
-      font-weight: 600;
-      cursor: pointer;
+      margin-top: 16px;
     }
     #login-message {
       min-height: 18px;
@@ -165,72 +123,32 @@
 </head>
 <body>
   <div class="card">
-    <p class="subtitle" id="mode-subtitle">使用 Google 帳戶快速登入</p>
+    <p class="subtitle">使用 Google 帳戶快速登入</p>
     <h1 class="title">Dashboard</h1>
 
-    <div id="register-section" class="form-section hidden">
+    <div class="form-section" id="login-section">
       <div class="form-group">
-        <label for="reg-username">用戶名</label>
-        <input id="reg-username" class="input" type="text" placeholder="輸入用戶名">
-      </div>
-      <div class="form-group">
-        <label for="reg-password">密碼</label>
-        <input id="reg-password" class="input" type="password" placeholder="輸入密碼">
-      </div>
-      <div class="form-group">
-        <label for="reg-password2">再次輸入密碼</label>
-        <input id="reg-password2" class="input" type="password" placeholder="再次確認密碼">
-      </div>
-      <div class="form-group">
-        <label for="reg-email">電子郵件</label>
-        <input id="reg-email" class="input" type="email" placeholder="name@example.com">
-      </div>
-      <div class="form-group">
-        <label for="reg-invite">邀請碼（可留空）</label>
-        <input id="reg-invite" class="input" type="text" placeholder="選填">
-      </div>
-      <div class="form-group">
-        <label>性別</label>
-        <div class="radio-row custom-inline">
-          <label class="radio-option"><input type="radio" name="gender" value="male" checked> 男</label>
-          <label class="radio-option"><input type="radio" name="gender" value="female"> 女</label>
-          <label class="radio-option">
-            <input type="radio" name="gender" value="custom">
-            <span>自訂</span>
-          </label>
-          <select class="select" id="custom-gender" style="width: 140px;">
-            <option value="custom">自訂</option>
-            <option value="futa">扶他</option>
-            <option value="trap">男娘</option>
-            <option value="ladyboy">人妖</option>
-            <option value="other">其他</option>
-          </select>
-        </div>
-      </div>
-      <div class="checkbox-row">
-        <input type="checkbox" id="adult-check">
-        <label for="adult-check">我已滿 18 歲</label>
-      </div>
-      <button class="btn" type="button">註冊</button>
-    </div>
-
-    <div id="login-section" class="form-section">
-      <div class="form-group" style="margin-bottom: 0;">
         <label for="login-username">用戶名</label>
         <input id="login-username" class="input" type="text" placeholder="輸入用戶名">
       </div>
-      <div class="form-group" style="margin-bottom: 0;">
+      <div class="form-group" style="margin-bottom: 18px;">
         <label for="login-password">密碼</label>
         <input id="login-password" class="input" type="password" placeholder="輸入密碼">
       </div>
-      <div style="height: 8px;"></div>
       <button class="btn" type="button">登入</button>
-      <div class="external-auth">
-        <button id="telegram-login-btn" class="telegram-btn" type="button">
-          <span>使用 Telegram 一鍵登入</span>
-        </button>
-        <div class="divider">或使用</div>
-        <div id="google-signin"></div>
+      <div class="divider">或使用</div>
+      <div id="google-signin"></div>
+      <div id="telegram-login-container">
+        <!-- Official Telegram Login Widget -->
+        <script async src="https://telegram.org/js/telegram-widget.js?21"
+                data-telegram-login="loginyiranbot"
+                data-size="large"
+                data-radius="8"
+                data-auth-url="https://trading-app-backend-production-3b40.up.railway.app/auth/telegram"
+                data-userpic="true"
+                data-request-access="write"
+                data-lang="zh-hant">
+        </script>
       </div>
     </div>
 
@@ -238,106 +156,7 @@
     <div class="toggle-link" id="toggle-link">
       沒有帳號？<span>註冊</span>
     </div>
-    <div id="telegramLoginScript" class="hidden"></div>
   </div>
-
-  <script type="module">
-    import { apiPostJson } from "./js/api.js";
-
-    const GOOGLE_CLIENT_ID =
-      "777320476444-89anlckf3uipogs3h9isg4tkr347ap6u.apps.googleusercontent.com";
-
-    const messageEl = document.getElementById("login-message");
-    const registerSection = document.getElementById("register-section");
-    const loginSection = document.getElementById("login-section");
-    const toggleLink = document.getElementById("toggle-link");
-    const subtitleEl = document.getElementById("mode-subtitle");
-    const customGenderSelect = document.getElementById("custom-gender");
-    const genderRadios = document.querySelectorAll('input[name="gender"]');
-    const telegramBtn = document.getElementById("telegram-login-btn");
-    let isRegister = false;
-
-    function updateMode() {
-      if (isRegister) {
-        registerSection.classList.remove("hidden");
-        loginSection.classList.add("hidden");
-        subtitleEl.textContent = "建立你的專屬帳號";
-        toggleLink.innerHTML = '已經有帳號？<span>前往登入</span>';
-      } else {
-        registerSection.classList.add("hidden");
-        loginSection.classList.remove("hidden");
-        subtitleEl.textContent = "使用 Google 帳戶快速登入";
-        toggleLink.innerHTML = '沒有帳號？<span>註冊</span>';
-      }
-    }
-
-    toggleLink.addEventListener("click", () => {
-      isRegister = !isRegister;
-      updateMode();
-    });
-
-    genderRadios.forEach(radio => {
-      radio.addEventListener("change", () => {
-        customGenderSelect.disabled = radio.value !== "custom";
-      });
-      if (!radio.checked && radio.value !== "custom") {
-        customGenderSelect.disabled = true;
-      }
-    });
-
-    customGenderSelect.disabled = genderRadios[2].checked ? false : true;
-    updateMode();
-
-    function setMessage(text, type = "info") {
-      messageEl.textContent = text;
-      messageEl.style.color = type === "error" ? "#dc2626" : "#16a34a";
-    }
-
-    window.handleCredentialResponse = async response => {
-      try {
-        setMessage("登入中...", "info");
-        const data = await apiPostJson("/auth/google", { idToken: response.credential });
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("authUser", JSON.stringify(data.user));
-        window.location.href = "index.html";
-      } catch (err) {
-        console.error(err);
-        setMessage("Google 登入失敗，請稍後再試", "error");
-      }
-    };
-
-    window.handleTelegramAuth = async function handleTelegramAuth(user) {
-      try {
-        setMessage("登入中...", "info");
-        const data = await apiPostJson("/auth/telegram", user);
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("authUser", JSON.stringify(data.user));
-        window.location.href = "index.html";
-      } catch (err) {
-        console.error(err);
-        setMessage("Telegram 登入失敗，請稍後再試", "error");
-      }
-    };
-
-    telegramBtn.addEventListener("click", () => {
-      if (!window.TelegramLoginWidget) {
-        const script = document.createElement("script");
-        script.src = "https://telegram.org/js/telegram-widget.js?21";
-        script.async = true;
-        script.dataset.telegramLogin = "loginyiranbot";
-        script.dataset.size = "large";
-        script.dataset.radius = "8";
-        script.dataset.requestAccess = "write";
-        script.dataset.lang = "zh-hant";
-        script.dataset.authUrl = "https://trading-app-backend-production-3b40.up.railway.app/auth/telegram";
-        script.dataset.onload = "window.TelegramLoginWidgetLoaded=true";
-        document.getElementById("telegramLoginScript").appendChild(script);
-      }
-      const widgetButton = document.querySelector(".telegram-login-widget") ||
-        document.querySelector("#telegramLoginScript script")?.nextElementSibling;
-      if (widgetButton) widgetButton.click();
-    });
-  </script>
 
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
@@ -346,7 +165,9 @@
         if (window.google?.accounts?.id) {
           google.accounts.id.initialize({
             client_id: "777320476444-89anlckf3uipogs3h9isg4tkr347ap6u.apps.googleusercontent.com",
-            callback: window.handleCredentialResponse
+            callback: credentialResponse => {
+              console.log("Credential received", credentialResponse);
+            }
           });
           google.accounts.id.renderButton(
             document.getElementById("google-signin"),
