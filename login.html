@@ -138,16 +138,15 @@
       <button class="btn" type="button">登入</button>
       <div class="divider">或使用</div>
       <div id="google-signin"></div>
-      <div id="telegram-login-container">
-        <!-- Official Telegram Login Widget -->
-        <script async src="https://telegram.org/js/telegram-widget.js?21"
-                data-telegram-login="loginyiranbot"
-                data-size="large"
-                data-radius="8"
-                data-auth-url="https://trading-app-backend-production-3b40.up.railway.app/auth/telegram"
-                data-userpic="true"
-                data-request-access="write"
-                data-lang="zh-hant">
+      <div style="display:flex;justify-content:center;margin-top:16px;">
+        <!-- Telegram Login 官方小工具 -->
+        <script async
+          src="https://telegram.org/js/telegram-widget.js?22"
+          data-telegram-login="loginyiranbot"
+          data-size="small"
+          data-userpic="false"
+          data-onauth="onTelegramAuth(user)"
+          data-request-access="write">
         </script>
       </div>
     </div>
@@ -158,6 +157,47 @@
     </div>
   </div>
 
+  <script type="module">
+    import { apiPostJson } from "./js/api.js";
+
+    const messageEl = document.getElementById("login-message");
+
+    function setMessage(text, type = "info") {
+      if (!messageEl) return;
+      messageEl.textContent = text;
+      messageEl.style.color = type === "error" ? "#dc2626" : "#16a34a";
+    }
+
+    window.handleCredentialResponse = async function handleCredentialResponse(response) {
+      try {
+        if (!response || !response.credential) {
+          throw new Error("Missing Google credential");
+        }
+        setMessage("登入中...", "info");
+        const data = await apiPostJson("/auth/google", { idToken: response.credential });
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("authUser", JSON.stringify(data.user));
+        window.location.href = "index.html";
+      } catch (err) {
+        console.error(err);
+        setMessage("Google 登入失敗，請稍後再試", "error");
+      }
+    };
+
+    window.onTelegramAuth = async function onTelegramAuth(user) {
+      try {
+        setMessage("登入中...", "info");
+        const data = await apiPostJson("/auth/telegram", user);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("authUser", JSON.stringify(data.user));
+        window.location.href = "index.html";
+      } catch (err) {
+        console.error(err);
+        setMessage("Telegram 登入失敗，請稍後再試", "error");
+      }
+    };
+  </script>
+
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     window.addEventListener("load", () => {
@@ -165,9 +205,7 @@
         if (window.google?.accounts?.id) {
           google.accounts.id.initialize({
             client_id: "777320476444-89anlckf3uipogs3h9isg4tkr347ap6u.apps.googleusercontent.com",
-            callback: credentialResponse => {
-              console.log("Credential received", credentialResponse);
-            }
+            callback: window.handleCredentialResponse
           });
           google.accounts.id.renderButton(
             document.getElementById("google-signin"),
