@@ -52,7 +52,7 @@
   </div>
 
   <script type="module">
-    import { apiPost } from "./js/api.js";
+    import { apiPostJson } from "./js/api.js";
 
     const GOOGLE_CLIENT_ID = "777320476444-89anlckf3uipogs3h9isg4tkr347ap6u.apps.googleusercontent.com";
     const messageEl = document.getElementById("login-message");
@@ -84,7 +84,7 @@
     async function handleLoginResponse(idToken) {
       try {
         setMessage("登入中...", "info");
-        const data = await apiPost("/auth/google", { idToken });
+        const data = await apiPostJson("/auth/google", { idToken });
         const profile = {
           username: data.user?.email?.split("@")[0] || "user",
           email: data.user?.email,
