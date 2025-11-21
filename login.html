@@ -13,11 +13,11 @@
       justify-content: center;
       align-items: center;
       background: #f5f5f5;
-      font-family: "Segoe UI", sans-serif;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       color: #111827;
     }
     .card {
-      width: min(380px, 92vw);
+      width: min(400px, 92vw);
       background: #fff;
       border-radius: 18px;
       box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
@@ -27,26 +27,26 @@
       gap: 18px;
     }
     .title {
-      font-size: 24px;
+      margin: 0;
+      font-size: 26px;
       font-weight: 600;
       text-align: center;
-      margin: 0;
     }
     .subtitle {
-      text-align: center;
+      margin: 0;
       font-size: 14px;
+      text-align: center;
       color: #6b7280;
-      margin: 0 0 8px;
     }
     .form-section {
       display: flex;
       flex-direction: column;
+      gap: 18px;
     }
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin-bottom: 18px;
     }
     .form-group label {
       font-size: 14px;
@@ -59,29 +59,29 @@
       border-radius: 12px;
       border: 1px solid #d1d5db;
       padding: 12px 14px;
-      background: #fff;
       font-size: 15px;
       font-family: inherit;
+      background: #fff;
       box-sizing: border-box;
     }
     .radio-row {
       display: flex;
-      gap: 16px;
+      align-items: center;
+      gap: 12px;
       flex-wrap: wrap;
       font-size: 14px;
       color: #374151;
     }
-    .radio-row label {
-      display: flex;
+    .radio-option {
+      display: inline-flex;
       align-items: center;
       gap: 6px;
       font-weight: 500;
     }
-    .custom-gender {
-      display: none;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
+    .custom-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
     }
     .checkbox-row {
       display: flex;
@@ -93,26 +93,25 @@
     }
     .btn {
       width: 100%;
-      border: none;
-      border-radius: 12px;
       height: 48px;
+      border-radius: 12px;
+      border: none;
       font-size: 16px;
       font-weight: 600;
-      font-family: inherit;
-      background: #111827;
       color: #fff;
+      background: #111827;
+      font-family: inherit;
       cursor: pointer;
       margin-top: 10px;
       transition: background 0.2s ease;
     }
-    .btn:hover { background: #0b101b; }
+    .btn:hover { background: #0c111b; }
     .divider {
       display: flex;
       align-items: center;
       gap: 12px;
       font-size: 12px;
       color: #9ca3af;
-      margin: 10px 0;
     }
     .divider::before,
     .divider::after {
@@ -121,16 +120,30 @@
       height: 1px;
       background: #e5e7eb;
     }
+    .external-auth {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
     #google-signin,
-    #telegram-login-box {
+    #telegram-login {
       width: 100%;
       display: flex;
       justify-content: center;
-      align-items: center;
     }
-    #telegram-login-box {
-      margin: 10px 0 20px 0;
-      justify-content: flex-start;
+    .telegram-btn {
+      width: 100%;
+      border: 1px solid #dbeafe;
+      background: #e0f2ff;
+      color: #0f172a;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 600;
+      cursor: pointer;
     }
     #login-message {
       min-height: 18px;
@@ -178,19 +191,20 @@
       </div>
       <div class="form-group">
         <label>性別</label>
-        <div class="radio-row">
-          <label><input type="radio" name="gender" value="male" checked> 男</label>
-          <label><input type="radio" name="gender" value="female"> 女</label>
-          <label><input type="radio" name="gender" value="custom"> 自訂</label>
-        </div>
-        <div class="custom-gender" id="custom-gender">
-          <select class="select" id="custom-gender-select">
+        <div class="radio-row custom-inline">
+          <label class="radio-option"><input type="radio" name="gender" value="male" checked> 男</label>
+          <label class="radio-option"><input type="radio" name="gender" value="female"> 女</label>
+          <label class="radio-option">
+            <input type="radio" name="gender" value="custom">
+            <span>自訂</span>
+          </label>
+          <select class="select" id="custom-gender" style="width: 140px;">
             <option value="custom">自訂</option>
             <option value="futa">扶他</option>
             <option value="trap">男娘</option>
             <option value="ladyboy">人妖</option>
+            <option value="other">其他</option>
           </select>
-          <input class="input" type="text" placeholder="輸入自訂描述（選填）">
         </div>
       </div>
       <div class="checkbox-row">
@@ -201,24 +215,30 @@
     </div>
 
     <div id="login-section" class="form-section">
-      <div class="form-group">
+      <div class="form-group" style="margin-bottom: 0;">
         <label for="login-username">用戶名</label>
         <input id="login-username" class="input" type="text" placeholder="輸入用戶名">
       </div>
-      <div class="form-group">
+      <div class="form-group" style="margin-bottom: 0;">
         <label for="login-password">密碼</label>
         <input id="login-password" class="input" type="password" placeholder="輸入密碼">
       </div>
+      <div style="height: 8px;"></div>
       <button class="btn" type="button">登入</button>
-      <div id="telegram-login-box"></div>
-      <div class="divider">或使用</div>
-      <div id="google-signin"></div>
+      <div class="external-auth">
+        <button id="telegram-login-btn" class="telegram-btn" type="button">
+          <span>使用 Telegram 一鍵登入</span>
+        </button>
+        <div class="divider">或使用</div>
+        <div id="google-signin"></div>
+      </div>
     </div>
 
     <div id="login-message"></div>
     <div class="toggle-link" id="toggle-link">
       沒有帳號？<span>註冊</span>
     </div>
+    <div id="telegramLoginScript" class="hidden"></div>
   </div>
 
   <script type="module">
@@ -232,8 +252,9 @@
     const loginSection = document.getElementById("login-section");
     const toggleLink = document.getElementById("toggle-link");
     const subtitleEl = document.getElementById("mode-subtitle");
-    const customGenderBox = document.getElementById("custom-gender");
+    const customGenderSelect = document.getElementById("custom-gender");
     const genderRadios = document.querySelectorAll('input[name="gender"]');
+    const telegramBtn = document.getElementById("telegram-login-btn");
     let isRegister = false;
 
     function updateMode() {
@@ -250,19 +271,22 @@
       }
     }
 
-    function updateGenderOptions() {
-      const picked = [...genderRadios].find(r => r.checked)?.value;
-      customGenderBox.style.display = picked === "custom" ? "flex" : "none";
-    }
-
-    genderRadios.forEach(r => r.addEventListener("change", updateGenderOptions));
     toggleLink.addEventListener("click", () => {
       isRegister = !isRegister;
       updateMode();
     });
 
+    genderRadios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        customGenderSelect.disabled = radio.value !== "custom";
+      });
+      if (!radio.checked && radio.value !== "custom") {
+        customGenderSelect.disabled = true;
+      }
+    });
+
+    customGenderSelect.disabled = genderRadios[2].checked ? false : true;
     updateMode();
-    updateGenderOptions();
 
     function setMessage(text, type = "info") {
       messageEl.textContent = text;
@@ -294,6 +318,25 @@
         setMessage("Telegram 登入失敗，請稍後再試", "error");
       }
     };
+
+    telegramBtn.addEventListener("click", () => {
+      if (!window.TelegramLoginWidget) {
+        const script = document.createElement("script");
+        script.src = "https://telegram.org/js/telegram-widget.js?21";
+        script.async = true;
+        script.dataset.telegramLogin = "loginyiranbot";
+        script.dataset.size = "large";
+        script.dataset.radius = "8";
+        script.dataset.requestAccess = "write";
+        script.dataset.lang = "zh-hant";
+        script.dataset.authUrl = "https://trading-app-backend-production-3b40.up.railway.app/auth/telegram";
+        script.dataset.onload = "window.TelegramLoginWidgetLoaded=true";
+        document.getElementById("telegramLoginScript").appendChild(script);
+      }
+      const widgetButton = document.querySelector(".telegram-login-widget") ||
+        document.querySelector("#telegramLoginScript script")?.nextElementSibling;
+      if (widgetButton) widgetButton.click();
+    });
   </script>
 
   <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -313,19 +356,6 @@
         }
       }, 100);
     });
-  </script>
-
-  <script
-    async
-    src="https://telegram.org/js/telegram-widget.js?21"
-    data-telegram-login="loginyiranbot"
-    data-size="large"
-    data-radius="8"
-    data-auth-url="https://trading-app-backend-production-3b40.up.railway.app/auth/telegram"
-    data-userpic="true"
-    data-request-access="write"
-    data-lang="zh-hant"
-    data-container="telegram-login-box">
   </script>
 </body>
 </html>
