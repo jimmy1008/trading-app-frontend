@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>登入 Dashboard</title>
-
   <style>
     body {
       margin: 0;
@@ -33,6 +32,14 @@
       margin-top: 16px;
       font-size: 14px;
     }
+    #telegram-login-box {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    #telegram-login-box iframe {
+      transform: scale(1);
+    }
   </style>
 </head>
 
@@ -45,15 +52,15 @@
     <div id="google-signin"></div>
 
     <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px; align-items: center;">
-      <div id="telegram-login-box">載入 Telegram 登入中…</div>
-      <small style="font-size: 12px; color: #9ca3af;">也可以使用 Telegram 一鍵登入</small>
+      <div id="telegram-login-box"></div>
+      <small style="font-size: 12px; color: #9ca3af;">
+        也可以使用 Telegram 一鍵登入
+      </small>
     </div>
 
     <div id="login-message"></div>
   </div>
 
-
-  <!-- main login script -->
   <script type="module">
     import { apiPostJson } from "./js/api.js";
 
@@ -67,12 +74,10 @@
       messageEl.style.color = type === "error" ? "#dc2626" : "#16a34a";
     }
 
-    // Google callback
-    window.handleCredentialResponse = async (response) => {
+    window.handleCredentialResponse = async response => {
       try {
         setMessage("登入中...", "info");
         const data = await apiPostJson("/auth/google", { idToken: response.credential });
-
         localStorage.setItem("token", data.token);
         localStorage.setItem("authUser", JSON.stringify(data.user));
         window.location.href = "index.html";
@@ -81,26 +86,10 @@
         setMessage("Google 登入失敗，請稍後再試", "error");
       }
     };
-
-    // Telegram callback
-    window.handleTelegramAuth = async function (user) {
-      try {
-        setMessage("登入中...", "info");
-        const data = await apiPostJson("/auth/telegram", user);
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("authUser", JSON.stringify(data.user));
-        window.location.href = "index.html";
-      } catch (err) {
-        console.error(err);
-        setMessage("Telegram 登入失敗，請稍後再試", "error");
-      }
-    };
   </script>
 
-  <!-- Load Google script once -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <!-- Render Google button when Google is ready -->
   <script>
     window.addEventListener("load", () => {
       const interval = setInterval(() => {
@@ -121,16 +110,16 @@
     });
   </script>
 
-  <!-- Telegram Widget -->
-  <script async src="https://telegram.org/js/telegram-widget.js?21"
+  <script async
+    src="https://telegram.org/js/telegram-widget.js?21"
     data-telegram-login="loginyiranbot"
     data-container="telegram-login-box"
     data-size="large"
     data-radius="8"
+    data-auth-url="https://trading-app-backend-production-3b40.up.railway.app/auth/telegram"
     data-userpic="true"
     data-request-access="write"
-    data-lang="zh-hant"
-    data-auth-url="https://trading-app-backend-production-3b40.up.railway.app/auth/telegram">
+    data-lang="zh-hant">
   </script>
 
 </body>
