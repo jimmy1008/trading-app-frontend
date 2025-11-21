@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>登入 Dashboard</title>
   <style>
-    :root {
-      color-scheme: light;
-    }
+    :root { color-scheme: light; }
     body {
       margin: 0;
-      background: #f5f5f5;
+      background: #f3f4f6;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -19,31 +17,36 @@
       color: #111827;
     }
     .box {
-      background: white;
-      width: min(360px, 90vw);
-      border-radius: 18px;
+      width: min(360px, 92vw);
+      background: #fff;
+      border-radius: 20px;
       box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
-      padding: 32px;
+      padding: 40px 50px;
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
     .title {
-      text-align: center;
       font-size: 24px;
-      font-weight: 600;
+      text-align: center;
       margin: 0;
+      font-weight: 600;
     }
     .subtitle {
-      text-align: center;
       font-size: 14px;
+      text-align: center;
       color: #6b7280;
-      margin: 0 0 16px;
+      margin: 0 0 12px;
+    }
+    .form-section {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
     .form-group label {
       font-size: 13px;
@@ -51,87 +54,99 @@
     }
     .input, .select {
       border: 1px solid #d1d5db;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 14px;
-      font-family: inherit;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
       background: #fff;
-      width: 100%;
+      height: 48px;
       box-sizing: border-box;
+      font-family: inherit;
     }
-    .radio-group, .checkbox-group {
+    .radio-row {
       display: flex;
-      gap: 12px;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: #374151;
+    }
+    .radio-option {
+      display: flex;
       align-items: center;
+      gap: 6px;
+    }
+    .gender-other {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .gender-select {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+    #gender-other:checked ~ .gender-select {
+      display: flex;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: 13px;
       color: #374151;
     }
     .btn {
+      width: 100%;
       border: none;
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 15px;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 16px;
       font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
       background: #111827;
-      color: white;
+      color: #fff;
+      cursor: pointer;
       transition: background 0.2s ease;
+    }
+    .btn:hover { background: #0b101b; }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+    #google-signin,
+    #telegram-login-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 100%;
     }
-    .btn:hover {
-      background: #0a0f1a;
+    #telegram-login-box {
+      overflow: hidden;
+    }
+    #login-message {
+      min-height: 18px;
+      text-align: center;
+      font-size: 13px;
     }
     .toggle-link {
       text-align: center;
       font-size: 13px;
       color: #6b7280;
-      cursor: pointer;
     }
     .toggle-link span {
       color: #111827;
+      cursor: pointer;
       font-weight: 600;
     }
-    .divider {
-      position: relative;
-      text-align: center;
-      font-size: 12px;
-      color: #9ca3af;
-      margin: 8px 0;
-    }
-    .divider::before,
-    .divider::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      width: 40%;
-      height: 1px;
-      background: #e5e7eb;
-    }
-    .divider::before {
-      left: 0;
-    }
-    .divider::after {
-      right: 0;
-    }
-    #login-message {
-      font-size: 13px;
-      text-align: center;
-      min-height: 18px;
-    }
-    #telegram-login-box {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      overflow: hidden;
-    }
-    #telegram-login-box iframe {
-      max-width: 100%;
-      transform-origin: center;
-    }
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
   </style>
 </head>
 
@@ -161,18 +176,32 @@
         <label for="reg-invite">邀請碼（可留空）</label>
         <input id="reg-invite" class="input" type="text" placeholder="選填">
       </div>
-      <div class="form-group">
+      <div class="form-group gender-other">
         <label>性別</label>
-        <div class="radio-group">
-          <label><input type="radio" name="gender" checked> 男</label>
-          <label><input type="radio" name="gender"> 女</label>
+        <div class="radio-row">
+          <label class="radio-option">
+            <input type="radio" name="gender" id="gender-male">
+            <span>男</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="gender" id="gender-female">
+            <span>女</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="gender" id="gender-other" checked>
+            <span>其他</span>
+          </label>
         </div>
-        <select class="select">
-          <option>扶他</option>
-          <option>男娘</option>
-          <option>人妖</option>
-          <option>自訂</option>
-        </select>
+        <div class="gender-select">
+          <select class="select">
+            <option>自訂</option>
+            <option>扶他</option>
+            <option>男娘</option>
+            <option>人妖</option>
+            <option>其他</option>
+          </select>
+          <input class="input" type="text" placeholder="自訂描述（選填）">
+        </div>
       </div>
       <div class="checkbox-group">
         <input type="checkbox" id="adult-check">
@@ -191,13 +220,12 @@
         <input id="login-password" class="input" type="password" placeholder="輸入密碼">
       </div>
       <button class="btn" type="button">登入</button>
-      <div class="divider">或</div>
+      <div class="divider">或使用</div>
       <div id="google-signin"></div>
       <div id="telegram-login-box"></div>
     </div>
 
     <div id="login-message"></div>
-
     <div class="toggle-link" id="toggle-link">
       沒有帳號？<span>註冊</span>
     </div>
@@ -220,13 +248,13 @@
       if (isRegister) {
         registerSection.classList.remove("hidden");
         loginSection.classList.add("hidden");
-        toggleLink.innerHTML = '已經有帳號？<span>前往登入</span>';
         subtitleEl.textContent = "建立你的專屬帳號";
+        toggleLink.innerHTML = '已經有帳號？<span>前往登入</span>';
       } else {
         registerSection.classList.add("hidden");
         loginSection.classList.remove("hidden");
-        toggleLink.innerHTML = '沒有帳號？<span>註冊</span>';
         subtitleEl.textContent = "使用 Google 帳戶快速登入";
+        toggleLink.innerHTML = '沒有帳號？<span>註冊</span>';
       }
     }
 
