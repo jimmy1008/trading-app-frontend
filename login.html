@@ -8,40 +8,40 @@
     :root { color-scheme: light; }
     body {
       margin: 0;
-      background: #f3f4f6;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      background: #f5f5f5;
       font-family: "Segoe UI", sans-serif;
       color: #111827;
     }
-    .box {
-      width: min(360px, 92vw);
+    .card {
+      width: min(380px, 92vw);
       background: #fff;
-      border-radius: 20px;
+      border-radius: 18px;
       box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
       padding: 40px 50px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
     }
     .title {
-      font-size: 24px;
       text-align: center;
+      font-size: 24px;
       margin: 0;
       font-weight: 600;
     }
     .subtitle {
-      font-size: 14px;
       text-align: center;
+      font-size: 14px;
       color: #6b7280;
-      margin: 0 0 12px;
+      margin: 0;
     }
     .form-section {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 16px;
     }
     .form-group {
       display: flex;
@@ -49,24 +49,24 @@
       gap: 8px;
     }
     .form-group label {
-      font-size: 13px;
+      font-size: 14px;
       color: #6b7280;
     }
     .input, .select {
-      border: 1px solid #d1d5db;
+      height: 48px;
       border-radius: 12px;
+      border: 1px solid #d1d5db;
       padding: 12px 14px;
       font-size: 15px;
-      background: #fff;
-      height: 48px;
-      box-sizing: border-box;
       font-family: inherit;
+      background: #fff;
+      box-sizing: border-box;
     }
     .radio-row {
       display: flex;
       gap: 16px;
       flex-wrap: wrap;
-      font-size: 13px;
+      font-size: 14px;
       color: #374151;
     }
     .radio-option {
@@ -74,45 +74,39 @@
       align-items: center;
       gap: 6px;
     }
-    .gender-other {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
     .gender-select {
       display: none;
       flex-direction: column;
-      gap: 10px;
-    }
-    #gender-other:checked ~ .gender-select {
-      display: flex;
-    }
-    .checkbox-group {
-      display: flex;
-      align-items: center;
       gap: 8px;
-      font-size: 13px;
+    }
+    .checkbox-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 14px;
       color: #374151;
     }
     .btn {
-      width: 100%;
+      background: #111827;
+      color: #fff;
       border: none;
       border-radius: 14px;
       padding: 14px;
       font-size: 16px;
       font-weight: 600;
-      background: #111827;
-      color: #fff;
+      font-family: inherit;
       cursor: pointer;
       transition: background 0.2s ease;
     }
-    .btn:hover { background: #0b101b; }
+    .btn:hover {
+      background: #0c111b;
+    }
     .divider {
       display: flex;
       align-items: center;
       gap: 12px;
-      color: #9ca3af;
       font-size: 12px;
+      color: #9ca3af;
     }
     .divider::before,
     .divider::after {
@@ -132,9 +126,10 @@
       overflow: hidden;
     }
     #login-message {
-      min-height: 18px;
       text-align: center;
       font-size: 13px;
+      min-height: 18px;
+      color: #16a34a;
     }
     .toggle-link {
       text-align: center;
@@ -142,18 +137,19 @@
       color: #6b7280;
     }
     .toggle-link span {
+      font-weight: 600;
       color: #111827;
       cursor: pointer;
-      font-weight: 600;
     }
     .hidden { display: none; }
   </style>
 </head>
-
 <body>
-  <div class="box">
-    <h1 class="title">Dashboard</h1>
-    <p class="subtitle" id="mode-subtitle">使用 Google 帳戶快速登入</p>
+  <div class="card">
+    <div>
+      <p class="subtitle" id="mode-subtitle">使用 Google 帳戶快速登入</p>
+      <h1 class="title">Dashboard</h1>
+    </div>
 
     <div id="register-section" class="form-section hidden">
       <div class="form-group">
@@ -176,38 +172,37 @@
         <label for="reg-invite">邀請碼（可留空）</label>
         <input id="reg-invite" class="input" type="text" placeholder="選填">
       </div>
-      <div class="form-group gender-other">
+      <div class="form-group">
         <label>性別</label>
         <div class="radio-row">
           <label class="radio-option">
-            <input type="radio" name="gender" id="gender-male">
+            <input type="radio" name="gender" value="male" checked>
             <span>男</span>
           </label>
           <label class="radio-option">
-            <input type="radio" name="gender" id="gender-female">
+            <input type="radio" name="gender" value="female">
             <span>女</span>
           </label>
           <label class="radio-option">
-            <input type="radio" name="gender" id="gender-other" checked>
+            <input type="radio" name="gender" value="other">
             <span>其他</span>
           </label>
         </div>
-        <div class="gender-select">
-          <select class="select">
-            <option>自訂</option>
-            <option>扶他</option>
-            <option>男娘</option>
-            <option>人妖</option>
-            <option>其他</option>
+        <div class="gender-select" id="gender-select">
+          <select class="select" id="gender-dropdown">
+            <option value="custom">自訂</option>
+            <option value="futa">扶他</option>
+            <option value="trap">男娘</option>
+            <option value="ladyboy">人妖</option>
           </select>
           <input class="input" type="text" placeholder="自訂描述（選填）">
         </div>
       </div>
-      <div class="checkbox-group">
+      <div class="checkbox-row">
         <input type="checkbox" id="adult-check">
         <label for="adult-check">我已滿 18 歲</label>
       </div>
-      <button class="btn" type="button">註冊</button>
+      <button type="button" class="btn">註冊</button>
     </div>
 
     <div id="login-section" class="form-section">
@@ -219,16 +214,16 @@
         <label for="login-password">密碼</label>
         <input id="login-password" class="input" type="password" placeholder="輸入密碼">
       </div>
-      <button class="btn" type="button">登入</button>
-      <div class="divider">或使用</div>
-      <div id="google-signin"></div>
-      <div id="telegram-login-box"></div>
+      <button type="button" class="btn">登入</button>
+      <div class="divider">或</div>
+      <div class="form-section" style="gap:16px;">
+        <div id="google-signin"></div>
+        <div id="telegram-login-box"></div>
+      </div>
     </div>
 
     <div id="login-message"></div>
-    <div class="toggle-link" id="toggle-link">
-      沒有帳號？<span>註冊</span>
-    </div>
+    <div class="toggle-link" id="toggle-link">沒有帳號？<span>註冊</span></div>
   </div>
 
   <script type="module">
@@ -242,6 +237,8 @@
     const loginSection = document.getElementById("login-section");
     const toggleLink = document.getElementById("toggle-link");
     const subtitleEl = document.getElementById("mode-subtitle");
+    const genderRadios = document.querySelectorAll('input[name="gender"]');
+    const genderSelect = document.getElementById("gender-select");
     let isRegister = false;
 
     function updateMode() {
@@ -263,6 +260,12 @@
       updateMode();
     });
 
+    function updateGenderSelect() {
+      const value = [...genderRadios].find(r => r.checked)?.value;
+      genderSelect.style.display = value === "other" ? "flex" : "none";
+    }
+    genderRadios.forEach(radio => radio.addEventListener("change", updateGenderSelect));
+    updateGenderSelect();
     updateMode();
 
     function setMessage(text, type = "info") {
@@ -298,7 +301,6 @@
   </script>
 
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-
   <script>
     window.addEventListener("load", () => {
       const interval = setInterval(() => {
@@ -307,12 +309,10 @@
             client_id: "777320476444-89anlckf3uipogs3h9isg4tkr347ap6u.apps.googleusercontent.com",
             callback: window.handleCredentialResponse
           });
-
           google.accounts.id.renderButton(
             document.getElementById("google-signin"),
             { theme: "outline", size: "large" }
           );
-
           clearInterval(interval);
         }
       }, 100);
