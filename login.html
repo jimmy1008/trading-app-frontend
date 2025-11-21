@@ -24,37 +24,44 @@
       padding: 40px 50px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 18px;
     }
     .title {
-      text-align: center;
       font-size: 24px;
-      margin: 0;
       font-weight: 600;
+      text-align: center;
+      margin: 0;
     }
     .subtitle {
       text-align: center;
       font-size: 14px;
       color: #6b7280;
-      margin: 0;
+      margin: 0 0 8px;
+    }
+    .form-section {
+      display: flex;
+      flex-direction: column;
     }
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
+      margin-bottom: 18px;
     }
     .form-group label {
       font-size: 14px;
-      color: #6b7280;
+      font-weight: 600;
+      color: #4b5563;
     }
-    .input, .select {
+    .input,
+    .select {
       height: 48px;
       border-radius: 12px;
       border: 1px solid #d1d5db;
       padding: 12px 14px;
+      background: #fff;
       font-size: 15px;
       font-family: inherit;
-      background: #fff;
       box-sizing: border-box;
     }
     .radio-row {
@@ -64,44 +71,48 @@
       font-size: 14px;
       color: #374151;
     }
-    .radio-option {
+    .radio-row label {
       display: flex;
       align-items: center;
       gap: 6px;
+      font-weight: 500;
     }
-    .gender-select {
+    .custom-gender {
       display: none;
       flex-direction: column;
       gap: 8px;
+      margin-top: 8px;
     }
     .checkbox-row {
       display: flex;
-      gap: 8px;
       align-items: center;
+      gap: 8px;
       font-size: 14px;
       color: #374151;
+      margin-top: 10px;
     }
     .btn {
-      background: #111827;
-      color: #fff;
+      width: 100%;
       border: none;
-      border-radius: 14px;
-      padding: 14px;
+      border-radius: 12px;
+      height: 48px;
       font-size: 16px;
       font-weight: 600;
       font-family: inherit;
+      background: #111827;
+      color: #fff;
       cursor: pointer;
+      margin-top: 10px;
       transition: background 0.2s ease;
     }
-    .btn:hover {
-      background: #0c111b;
-    }
+    .btn:hover { background: #0b101b; }
     .divider {
       display: flex;
       align-items: center;
       gap: 12px;
       font-size: 12px;
       color: #9ca3af;
+      margin: 10px 0;
     }
     .divider::before,
     .divider::after {
@@ -112,31 +123,19 @@
     }
     #google-signin,
     #telegram-login-box {
+      width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 100%;
     }
     #telegram-login-box {
-      position: relative;
-      max-width: 320px;
-      margin: 0 auto;
-      padding: 0 6px;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
-    #telegram-login-box iframe {
-      position: relative !important;
-      display: block !important;
-      left: 0 !important;
-      width: 100% !important;
-      height: 52px !important;
+      margin: 10px 0 20px 0;
+      justify-content: flex-start;
     }
     #login-message {
+      min-height: 18px;
       text-align: center;
       font-size: 13px;
-      min-height: 18px;
-      color: #16a34a;
     }
     .toggle-link {
       text-align: center;
@@ -144,8 +143,8 @@
       color: #6b7280;
     }
     .toggle-link span {
-      font-weight: 600;
       color: #111827;
+      font-weight: 600;
       cursor: pointer;
     }
     .hidden { display: none; }
@@ -153,10 +152,8 @@
 </head>
 <body>
   <div class="card">
-    <div>
-      <p class="subtitle" id="mode-subtitle">使用 Google 帳戶快速登入</p>
-      <h1 class="title">Dashboard</h1>
-    </div>
+    <p class="subtitle" id="mode-subtitle">使用 Google 帳戶快速登入</p>
+    <h1 class="title">Dashboard</h1>
 
     <div id="register-section" class="form-section hidden">
       <div class="form-group">
@@ -182,34 +179,25 @@
       <div class="form-group">
         <label>性別</label>
         <div class="radio-row">
-          <label class="radio-option">
-            <input type="radio" name="gender" value="male" checked>
-            <span>男</span>
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="gender" value="female">
-            <span>女</span>
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="gender" value="other">
-            <span>其他</span>
-          </label>
+          <label><input type="radio" name="gender" value="male" checked> 男</label>
+          <label><input type="radio" name="gender" value="female"> 女</label>
+          <label><input type="radio" name="gender" value="custom"> 自訂</label>
         </div>
-        <div class="gender-select" id="gender-select">
-          <select class="select" id="gender-dropdown">
+        <div class="custom-gender" id="custom-gender">
+          <select class="select" id="custom-gender-select">
             <option value="custom">自訂</option>
             <option value="futa">扶他</option>
             <option value="trap">男娘</option>
             <option value="ladyboy">人妖</option>
           </select>
-          <input class="input" type="text" placeholder="自訂描述（選填）">
+          <input class="input" type="text" placeholder="輸入自訂描述（選填）">
         </div>
       </div>
       <div class="checkbox-row">
         <input type="checkbox" id="adult-check">
         <label for="adult-check">我已滿 18 歲</label>
       </div>
-      <button type="button" class="btn">註冊</button>
+      <button class="btn" type="button">註冊</button>
     </div>
 
     <div id="login-section" class="form-section">
@@ -221,16 +209,16 @@
         <label for="login-password">密碼</label>
         <input id="login-password" class="input" type="password" placeholder="輸入密碼">
       </div>
-      <button type="button" class="btn">登入</button>
-      <div class="divider">或</div>
-      <div class="form-section" style="gap:16px;">
-        <div id="google-signin"></div>
-        <div id="telegram-login-box"></div>
-      </div>
+      <button class="btn" type="button">登入</button>
+      <div id="telegram-login-box"></div>
+      <div class="divider">或使用</div>
+      <div id="google-signin"></div>
     </div>
 
     <div id="login-message"></div>
-    <div class="toggle-link" id="toggle-link">沒有帳號？<span>註冊</span></div>
+    <div class="toggle-link" id="toggle-link">
+      沒有帳號？<span>註冊</span>
+    </div>
   </div>
 
   <script type="module">
@@ -244,8 +232,8 @@
     const loginSection = document.getElementById("login-section");
     const toggleLink = document.getElementById("toggle-link");
     const subtitleEl = document.getElementById("mode-subtitle");
+    const customGenderBox = document.getElementById("custom-gender");
     const genderRadios = document.querySelectorAll('input[name="gender"]');
-    const genderSelect = document.getElementById("gender-select");
     let isRegister = false;
 
     function updateMode() {
@@ -262,18 +250,19 @@
       }
     }
 
+    function updateGenderOptions() {
+      const picked = [...genderRadios].find(r => r.checked)?.value;
+      customGenderBox.style.display = picked === "custom" ? "flex" : "none";
+    }
+
+    genderRadios.forEach(r => r.addEventListener("change", updateGenderOptions));
     toggleLink.addEventListener("click", () => {
       isRegister = !isRegister;
       updateMode();
     });
 
-    function updateGenderSelect() {
-      const value = [...genderRadios].find(r => r.checked)?.value;
-      genderSelect.style.display = value === "other" ? "flex" : "none";
-    }
-    genderRadios.forEach(radio => radio.addEventListener("change", updateGenderSelect));
-    updateGenderSelect();
     updateMode();
+    updateGenderOptions();
 
     function setMessage(text, type = "info") {
       messageEl.textContent = text;
@@ -326,17 +315,17 @@
     });
   </script>
 
-  <script async
+  <script
+    async
     src="https://telegram.org/js/telegram-widget.js?21"
     data-telegram-login="loginyiranbot"
-    data-container="telegram-login-box"
     data-size="large"
     data-radius="8"
     data-auth-url="https://trading-app-backend-production-3b40.up.railway.app/auth/telegram"
     data-userpic="true"
     data-request-access="write"
     data-lang="zh-hant"
-    data-onauth="handleTelegramAuth">
+    data-container="telegram-login-box">
   </script>
 </body>
 </html>
