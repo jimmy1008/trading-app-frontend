@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>�n�J Dashboard</title>
+  <title>登入 Dashboard</title>
   <script src="https://accounts.google.com/gsi/client?onload=initGoogle" async defer></script>
   <style>
     body {
@@ -40,8 +40,14 @@
 
   <div class="box">
     <h1 style="margin-bottom:8px;">Dashboard</h1>
-    <p class="subtitle">�ϥ� Google �b��ֳt�n�J</p>
+    <p class="subtitle">使用 Google 帳戶快速登入</p>
     <div id="google-signin"></div>
+    <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px; align-items: center;">
+      <div id="telegram-login-container"></div>
+      <small style="font-size: 12px; color: #9ca3af;">
+        也可以使用 Telegram 一鍵登入
+      </small>
+    </div>
     <div id="login-message"></div>
   </div>
 
@@ -50,15 +56,34 @@
 
     const GOOGLE_CLIENT_ID = "777320476444-89anlckf3uipogs3h9isg4tkr347ap6u.apps.googleusercontent.com";
     const messageEl = document.getElementById("login-message");
+    const params = new URLSearchParams(window.location.search);
+    const err = params.get("error");
 
     function setMessage(text, type = "info") {
       messageEl.textContent = text;
       messageEl.style.color = type === "error" ? "#dc2626" : "#16a34a";
     }
 
+    if (err && messageEl) {
+      let text = "登入失敗，請再試一次";
+      if (err === "telegram_expired") text = "Telegram 登入連結已過期，請重新登入";
+      if (err === "telegram_invalid_hash") text = "Telegram 回傳驗證失敗，請重新登入";
+      if (err === "telegram_invalid") text = "收到的 Telegram 資料格式錯誤";
+      if (err === "telegram_config") text = "伺服器尚未正確設定 Telegram Login";
+      if (err === "telegram_error") text = "Telegram 登入發生錯誤，請稍後再試";
+
+      setMessage(text, "error");
+
+      params.delete("error");
+      const cleanUrl = `${window.location.pathname}${
+        params.toString() ? "?" + params.toString() : ""
+      }`;
+      window.history.replaceState({}, "", cleanUrl);
+    }
+
     async function handleLoginResponse(idToken) {
       try {
-        setMessage("�n�J��...", "info");
+        setMessage("登入中...", "info");
         const data = await apiPost("/auth/google", { idToken });
         const profile = {
           username: data.user?.email?.split("@")[0] || "user",
@@ -71,7 +96,7 @@
         window.location.href = "index.html";
       } catch (err) {
         console.error(err);
-        setMessage("Google �n�J���ѡA�еy��A��", "error");
+        setMessage("Google 登入失敗，請稍後再試", "error");
       }
     }
 
@@ -92,6 +117,19 @@
       );
       google.accounts.id.prompt();
     };
+
+  </script>
+  <!-- Telegram Login Widget -->
+  <script
+    async
+    src="https://telegram.org/js/telegram-widget.js?21"
+    data-telegram-login="loginyiranbot"
+    data-size="large"
+    data-radius="8"
+    data-auth-url="https://trading-app-backend-production-3b40.up.railway.app/auth/telegram"
+    data-userpic="true"
+    data-request-access="write"
+    data-lang="zh-hant">
   </script>
 
 </body>

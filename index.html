@@ -430,6 +430,19 @@
   <script type="module">
     import { apiGet, apiPost } from "./js/api.js";
 
+    (function persistTokenFromQuery() {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+      if (token) {
+        localStorage.setItem("token", token);
+        params.delete("token");
+        const cleanUrl = `${window.location.pathname}${
+          params.toString() ? "?" + params.toString() : ""
+        }`;
+        window.history.replaceState({}, "", cleanUrl);
+      }
+    })();
+
     const BACKEND_URL = "http://localhost:3000";
     const navEmail = document.getElementById('nav-email');
     const logoutBtn = document.getElementById('nav-logout');
