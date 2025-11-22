@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>µn¤J y1ran</title>
+  <title>ç™»å…¥ y1ran</title>
   <style>
     :root { color-scheme: light; }
     body {
@@ -146,26 +146,26 @@
 </head>
 <body>
   <div class="card">
-    <p class="subtitle">¨Ï¥Î¥ô·N¤è¦¡µn¤J y1ran</p>
+    <p class="subtitle">ä½¿ç”¨ä»»æ„æ–¹å¼ç™»å…¥ y1ran</p>
     <h1 class="title">y1ran</h1>
 
     <div class="form-section">
       <div class="form-group">
-        <label for="login-username">¥Î¤á¦W</label>
-        <input id="login-username" class="input" type="text" placeholder="¿é¤J¥Î¤á¦W">
+        <label for="login-username">ç”¨æˆ¶å</label>
+        <input id="login-username" class="input" type="text" placeholder="è¼¸å…¥ç”¨æˆ¶å">
       </div>
       <div class="form-group">
-        <label for="login-password">±K½X</label>
-        <input id="login-password" class="input" type="password" placeholder="¿é¤J±K½X">
+        <label for="login-password">å¯†ç¢¼</label>
+        <input id="login-password" class="input" type="password" placeholder="è¼¸å…¥å¯†ç¢¼">
       </div>
-      <button id="login-btn" class="btn" type="button">µn¤J</button>
+      <button id="login-btn" class="btn" type="button">ç™»å…¥</button>
 
-      <div class="divider">©Î¨Ï¥Î</div>
+      <div class="divider">æˆ–ä½¿ç”¨</div>
       <button id="google-login-btn" class="social-btn" type="button">
         <svg class="icon" viewBox="0 0 488 512" xmlns="http://www.w3.org/2000/svg">
           <path fill="#fff" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.4 64.9C258.4 52.4 94.3 116.6 94.3 256c0 86.5 69.9 157.5 153.7 157.5 98.2 0 135-70.3 140.8-106.8H248v-85.3h236.1c2.3 12.4 3.9 24.5 3.9 40.4z"/>
         </svg>
-        ¨Ï¥Î Google ±b¤áµn¤J
+        ä½¿ç”¨ Google å¸³æˆ¶ç™»å…¥
       </button>
       <div id="telegram-login-box">
         <script async
@@ -181,7 +181,7 @@
 
     <div id="login-message"></div>
     <div class="toggle-link">
-      ¨S¦³±b¸¹¡H<a href="register.html">µù¥U</a>
+      æ²’æœ‰å¸³è™Ÿï¼Ÿ<a href="register.html">è¨»å†Š</a>
     </div>
   </div>
 
@@ -204,19 +204,19 @@
       const password = document.getElementById("login-password").value;
 
       if (!username || !password) {
-        setMessage("½Ğ¿é¤J±b¸¹»P±K½X", "error");
+        setMessage("è«‹è¼¸å…¥å¸³è™Ÿèˆ‡å¯†ç¢¼", "error");
         return;
       }
 
       try {
-        setMessage("µn¤J¤¤...", "info");
+        setMessage("ç™»å…¥ä¸­...", "info");
         const data = await apiPostJson("/auth/login", { username, password });
         localStorage.setItem("token", data.token);
         localStorage.setItem("authUser", JSON.stringify(data.user));
         window.location.href = "index.html";
       } catch (err) {
         console.error(err);
-        setMessage("µn¤J¥¢±Ñ¡A½Ğ½T»{±b±K", "error");
+        setMessage("ç™»å…¥å¤±æ•—ï¼Œè«‹ç¢ºèªå¸³å¯†", "error");
       }
     });
 
@@ -225,14 +225,14 @@
         if (!response || !response.credential) {
           throw new Error("Missing Google credential");
         }
-        setMessage("µn¤J¤¤...", "info");
+        setMessage("ç™»å…¥ä¸­...", "info");
         const data = await apiPostJson("/auth/google", { idToken: response.credential });
         localStorage.setItem("token", data.token);
         localStorage.setItem("authUser", JSON.stringify(data.user));
         window.location.href = "index.html";
       } catch (err) {
         console.error(err);
-        setMessage("Google µn¤J¥¢±Ñ¡A½Ğµy«á¦A¸Õ", "error");
+        setMessage("Google ç™»å…¥å¤±æ•—ï¼Œè«‹ç¨å¾Œå†è©¦", "error");
       }
     };
 
@@ -246,14 +246,14 @@
 
     window.onTelegramAuth = async function onTelegramAuth(user) {
       try {
-        setMessage("µn¤J¤¤...", "info");
+        setMessage("ç™»å…¥ä¸­...", "info");
         const data = await apiPostJson("/auth/telegram", user);
         localStorage.setItem("token", data.token);
         localStorage.setItem("authUser", JSON.stringify(data.user));
         window.location.href = "index.html";
       } catch (err) {
         console.error(err);
-        setMessage("Telegram µn¤J¥¢±Ñ¡A½Ğµy«á¦A¸Õ", "error");
+        setMessage("Telegram ç™»å…¥å¤±æ•—ï¼Œè«‹ç¨å¾Œå†è©¦", "error");
       }
     };
 

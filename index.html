@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>交易控制儀表板</title>
+  <title>鈭斗??批?銵冽</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="stylesheet" href="./assets/css/records.css" />
@@ -17,7 +17,7 @@
   <aside class="w-64 px-6 py-8 flex flex-col border-r border-gray-200 fixed inset-y-0 bg-white z-20">
     <div class="flex-1">
       <div class="w-28 h-28 border border-gray-300 rounded-full mx-auto mb-2 overflow-hidden cursor-pointer" id="avatar-box">
-        <img id="user-avatar" src="" alt="使用者頭像" class="w-full h-full object-cover" />
+        <img id="user-avatar" src="" alt="雿輻??? class="w-full h-full object-cover" />
         <input id="avatar-input" type="file" accept="image/*" class="hidden" />
       </div>
       <div id="user-name" class="text-center font-semibold tracking-wide">user</div>
@@ -31,39 +31,38 @@
     </div>
     <div>
       <button id="quick-add-btn" class="w-full border border-gray-300 rounded-xl py-2 text-sm hover:bg-gray-100 transition">
-        快速建立
-      </button>
+        敹恍遣蝡?      </button>
     </div>
   </aside>
 
   <main class="main-air ml-64 p-10">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 bg-white/80 border border-gray-200 rounded-2xl px-6 py-3 shadow-sm">
       <div>
-        <div class="text-xs text-gray-500">目前登入帳號</div>
+        <div class="text-xs text-gray-500">?桀??餃撣唾?</div>
         <div id="nav-email" class="text-sm font-semibold">--</div>
       </div>
       <div class="flex items-center gap-3">
-        <a id="nav-profile" href="profile.html" class="px-4 py-2 border border-gray-300 rounded-xl text-sm hover:bg-gray-100 transition">個人資料</a>
+        <a id="nav-profile" href="profile.html" class="px-4 py-2 border border-gray-300 rounded-xl text-sm hover:bg-gray-100 transition">?犖鞈?</a>
         <button id="nav-logout" class="px-4 py-2 bg-black text-white rounded-xl text-sm hover:bg-gray-800 transition">
-          登出
+          ?餃
         </button>
       </div>
     </div>
     <section class="page-heading">
       <div class="heading-tabs">
-        <a class="heading-link active" href="index.html">儀表板</a>
+        <a class="heading-link active" href="index.html">?銵冽</a>
         <span class="heading-divider">/</span>
-        <a class="heading-link" href="portfolio.html">資產</a>
+        <a class="heading-link" href="portfolio.html">鞈</a>
       </div>
     </section>
 
     <section class="hero-section">
       <div class="hero-card hero-grid">
         <div class="hero-main">
-          <div class="hero-label">總資產</div>
+          <div class="hero-label">蝮質???/div>
           <div id="total-usdt" class="hero-amount">0 USDT</div>
-          <div id="total-twd" class="hero-subtext">≈ 0 TWD</div>
-          <div class="hero-meta-label mt-4">今日盈虧</div>
+          <div id="total-twd" class="hero-subtext">??0 TWD</div>
+          <div class="hero-meta-label mt-4">隞?</div>
           <div id="today-pnl" class="hero-meta-value">+0 USDT</div>
         </div>
         <div class="hero-trend">
@@ -74,11 +73,11 @@
         </div>
         <div class="hero-activity">
           <div class="hero-activity-block">
-            <div class="hero-activity-label">今日已紀錄</div>
-            <div id="today-count" class="hero-activity-value">0 筆</div>
+            <div class="hero-activity-label">隞撌脩???/div>
+            <div id="today-count" class="hero-activity-value">0 蝑?/div>
           </div>
           <div class="hero-activity-block">
-            <div class="hero-activity-label">今日勝率</div>
+            <div class="hero-activity-label">隞??</div>
             <div id="today-winrate" class="hero-activity-value">0%</div>
           </div>
         </div>
@@ -89,15 +88,15 @@
       <div class="recent-grid">
         <div>
           <div class="section-header">
-            <h2 class="section-title">最近一次交易</h2>
+            <h2 class="section-title">?餈?甈∩漱??/h2>
           </div>
           <div id="spotlight-card" class="spotlight-card glass-panel empty">
-            <div class="spotlight-empty">暫無紀錄</div>
+            <div class="spotlight-empty">?怎蝝??/div>
           </div>
         </div>
         <div>
           <div class="section-header">
-            <h2 class="section-title">近 7 日活動</h2>
+            <h2 class="section-title">餈?7 ?交暑??/h2>
           </div>
           <div class="timeline-card glass-panel compact">
             <div id="activity-dots" class="timeline-dots"></div>
@@ -109,34 +108,34 @@
 
     <section class="behavior-section">
       <div class="section-header">
-        <h2 class="section-title">交易類型分析</h2>
+        <h2 class="section-title">鈭斗?憿???</h2>
       </div>
       <div class="behavior-grid">
         <div class="behavior-card glass-panel">
-          <div class="behavior-icon">📈</div>
+          <div class="behavior-icon">??</div>
           <div>
-            <div class="behavior-label">多單比例</div>
+            <div class="behavior-label">憭瘥?</div>
             <div id="behavior-long" class="behavior-value">0%</div>
           </div>
         </div>
         <div class="behavior-card glass-panel">
-          <div class="behavior-icon">📉</div>
+          <div class="behavior-icon">??</div>
           <div>
-            <div class="behavior-label">空單比例</div>
+            <div class="behavior-label">蝛箏瘥?</div>
             <div id="behavior-short" class="behavior-value">0%</div>
           </div>
         </div>
         <div class="behavior-card glass-panel">
-          <div class="behavior-icon">⚙️</div>
+          <div class="behavior-icon">??</div>
           <div>
-            <div class="behavior-label">平均槓桿</div>
+            <div class="behavior-label">撟喳?瑽▼</div>
             <div id="behavior-leverage" class="behavior-value">0x</div>
           </div>
         </div>
         <div class="behavior-card glass-panel">
-          <div class="behavior-icon">⭐</div>
+          <div class="behavior-icon">潃?/div>
           <div>
-            <div class="behavior-label">最常交易</div>
+            <div class="behavior-label">?撣訾漱??/div>
             <div id="behavior-favorite" class="behavior-value">-</div>
           </div>
         </div>
@@ -146,11 +145,11 @@
     <section class="results-section">
       <div class="results-grid">
         <div class="result-card glass-panel">
-          <div class="result-card-title">📈 最近 3 筆最佳交易</div>
+          <div class="result-card-title">?? ?餈?3 蝑?雿喃漱??/div>
           <div id="best-trades" class="result-list"></div>
         </div>
         <div class="result-card glass-panel">
-          <div class="result-card-title">📉 最近 3 筆最差交易</div>
+          <div class="result-card-title">?? ?餈?3 蝑?撌桐漱??/div>
           <div id="worst-trades" class="result-list"></div>
         </div>
       </div>
@@ -158,7 +157,7 @@
 
     <section class="records-section records-list-section">
       <div class="section-header">
-        <h2 class="section-title">紀錄</h2>
+        <h2 class="section-title">蝝??/h2>
       </div>
       <div id="records-container" class="records-grid"></div>
     </section>
@@ -168,35 +167,35 @@
   <div id="exchange-picker-bg" class="fixed inset-0 bg-black bg-opacity-30 hidden flex items-center justify-center z-40" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="bg-white w-full max-w-4xl rounded-2xl border border-gray-200 p-8 shadow-2xl">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold">選擇交易所</h2>
-        <button id="exchange-picker-close" class="text-gray-500 hover:text-gray-800 text-2xl" aria-label="關閉交易所視窗">×</button>
+        <h2 class="text-2xl font-semibold">?豢?鈭斗??</h2>
+        <button id="exchange-picker-close" class="text-gray-500 hover:text-gray-800 text-2xl" aria-label="??鈭斗??閬?">?</button>
       </div>
       <div class="grid grid-cols-3 md:grid-cols-4 gap-6">
-        <button class="exchange-card" data-ex="binance" aria-label="選擇 Binance">
+        <button class="exchange-card" data-ex="binance" aria-label="?豢? Binance">
           <img src="./assets/img/binance.png" alt="Binance" class="exchange-picker-logo mx-auto mb-2" />
           <p class="text-center text-lg font-medium">Binance</p>
         </button>
-        <button class="exchange-card" data-ex="bybit" aria-label="選擇 Bybit">
+        <button class="exchange-card" data-ex="bybit" aria-label="?豢? Bybit">
           <img src="./assets/img/bybit.png" alt="Bybit" class="exchange-picker-logo mx-auto mb-2" />
           <p class="text-center text-lg font-medium">Bybit</p>
         </button>
-        <button class="exchange-card" data-ex="bitget" aria-label="選擇 Bitget">
+        <button class="exchange-card" data-ex="bitget" aria-label="?豢? Bitget">
           <img src="./assets/img/bitget.png" alt="Bitget" class="exchange-picker-logo mx-auto mb-2" />
           <p class="text-center text-lg font-medium">Bitget</p>
         </button>
-        <button class="exchange-card" data-ex="okx" aria-label="選擇 OKX">
+        <button class="exchange-card" data-ex="okx" aria-label="?豢? OKX">
           <img src="./assets/img/okx.png" alt="OKX" class="exchange-picker-logo mx-auto mb-2" />
           <p class="text-center text-lg font-medium">OKX</p>
         </button>
-        <button class="exchange-card" data-ex="bingx" aria-label="選擇 BingX">
+        <button class="exchange-card" data-ex="bingx" aria-label="?豢? BingX">
           <img src="./assets/img/bingx.png" alt="BingX" class="exchange-picker-logo mx-auto mb-2" />
           <p class="text-center text-lg font-medium">BingX</p>
         </button>
-        <button class="exchange-card" data-ex="mexc" aria-label="選擇 MEXC">
+        <button class="exchange-card" data-ex="mexc" aria-label="?豢? MEXC">
           <img src="./assets/img/mexc.png" alt="MEXC" class="exchange-picker-logo mx-auto mb-2" />
           <p class="text-center text-lg font-medium">MEXC</p>
         </button>
-        <button class="exchange-card" data-ex="gate" aria-label="選擇 Gate.io">
+        <button class="exchange-card" data-ex="gate" aria-label="?豢? Gate.io">
           <img src="./assets/img/gate.png" alt="Gate.io" class="exchange-picker-logo mx-auto mb-2" />
           <p class="text-center text-lg font-medium">Gate.io</p>
         </button>
@@ -207,7 +206,7 @@
   <!-- API Modal -->
   <div id="api-modal-bg" class="fixed inset-0 bg-black/30 hidden flex items-center justify-center z-50" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="bg-white w-80 rounded-2xl border border-gray-200 p-6 shadow-xl space-y-4">
-      <h2 id="api-modal-title" class="text-lg font-semibold">連接交易所</h2>
+      <h2 id="api-modal-title" class="text-lg font-semibold">??鈭斗??</h2>
       <div>
         <label class="block text-sm mb-1 text-gray-700">API Key</label>
         <input id="exchange-key" type="text" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm bg-white" />
@@ -217,12 +216,12 @@
         <input id="exchange-secret" type="password" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm bg-white" />
       </div>
       <div>
-        <label class="block text-sm mb-1 text-gray-700">Passphrase（Bitget / OKX）</label>
+        <label class="block text-sm mb-1 text-gray-700">Passphrase嚗itget / OKX嚗?/label>
         <input id="exchange-passphrase" type="password" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm bg-white" />
       </div>
       <div class="flex justify-end gap-3 pt-2">
-        <button id="api-cancel" class="border border-gray-300 rounded-xl px-4 py-2 text-sm hover:bg-gray-100">取消</button>
-        <button id="api-save" class="px-5 py-2 bg-black text-white rounded-xl text-sm hover:bg-gray-800 transition">保存</button>
+        <button id="api-cancel" class="border border-gray-300 rounded-xl px-4 py-2 text-sm hover:bg-gray-100">??</button>
+        <button id="api-save" class="px-5 py-2 bg-black text-white rounded-xl text-sm hover:bg-gray-800 transition">靽?</button>
       </div>
     </div>
   </div>
@@ -231,85 +230,85 @@
   <div id="record-modal-bg" class="fixed inset-0 bg-black/30 hidden z-[80] flex items-center justify-center">
     <div id="record-modal" class="w-full bg-white border border-gray-200 rounded-[32px] shadow-2xl p-8 space-y-8" style="max-width:1080px;">
       <div class="flex justify-between items-center">
-        <h2 class="text-xl font-semibold">快速建立交易紀錄</h2>
-        <button id="record-close" class="text-2xl text-gray-500 hover:text-gray-800" aria-label="關閉">×</button>
+        <h2 class="text-xl font-semibold">敹恍遣蝡漱????/h2>
+        <button id="record-close" class="text-2xl text-gray-500 hover:text-gray-800" aria-label="??">?</button>
       </div>
       <div class="record-modal-body grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="record-left-stack space-y-6">
           <div id="record-image-area" class="record-image-drop">
-            <img id="record-image-preview" class="hidden max-h-full object-cover" alt="紀錄預覽圖" />
+            <img id="record-image-preview" class="hidden max-h-full object-cover" alt="蝝??閬賢?" />
             <div class="record-image-placeholder">
-              <span class="text-lg">＋</span>
-              <span>點擊或拖曳加入圖片（可選）</span>
+              <span class="text-lg">嚗?/span>
+              <span>暺????喳??亙????舫嚗?/span>
             </div>
             <input id="record-image-input" type="file" accept="image/*" class="hidden" />
           </div>
           <div class="record-section">
-            <div class="record-section-title">交易資訊</div>
+            <div class="record-section-title">鈭斗?鞈?</div>
             <div class="form-grid">
               <div>
-                <label class="block text-sm mb-1 text-gray-600">幣種</label>
-                <input id="record-symbol" class="record-input-control" placeholder="例如：BTC / ETH / SOL">
+                <label class="block text-sm mb-1 text-gray-600">撟?車</label>
+                <input id="record-symbol" class="record-input-control" placeholder="靘?嚗TC / ETH / SOL">
               </div>
               <div>
-                <label class="block text-sm mb-1 text-gray-600">時間</label>
+                <label class="block text-sm mb-1 text-gray-600">??</label>
                 <input id="record-date" type="date" class="record-input-control bg-white">
               </div>
               <div>
-                <label class="block text-sm mb-1 text-gray-600">方向</label>
+                <label class="block text-sm mb-1 text-gray-600">?孵?</label>
                 <select id="record-side" class="record-input-control bg-white">
-                  <option value="">請選擇</option>
-                  <option value="long">做多</option>
-                  <option value="short">做空</option>
+                  <option value="">隢??/option>
+                  <option value="long">??</option>
+                  <option value="short">?征</option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm mb-1 text-gray-600">結果</label>
+                <label class="block text-sm mb-1 text-gray-600">蝯?</label>
                 <select id="record-result" class="record-input-control bg-white">
-                  <option value="">請選擇</option>
-                  <option value="win">止盈</option>
-                  <option value="loss">止損</option>
-                  <option value="exit">提前出場</option>
-                  <option value="open">持倉中</option>
+                  <option value="">隢??/option>
+                  <option value="win">甇Ｙ?</option>
+                  <option value="loss">甇Ｘ?</option>
+                  <option value="exit">???箏</option>
+                  <option value="open">?葉</option>
                 </select>
               </div>
             </div>
           </div>
           <div class="record-section">
-            <div class="record-section-title">金額資訊</div>
+            <div class="record-section-title">??鞈?</div>
             <div>
-              <label class="block text-sm mb-1 text-gray-600">盈虧（USDT）</label>
-              <input id="record-pnl" class="record-input-control" placeholder="例如：+5 / -13">
+              <label class="block text-sm mb-1 text-gray-600">?嚗SDT嚗?/label>
+              <input id="record-pnl" class="record-input-control" placeholder="靘?嚗?5 / -13">
             </div>
           </div>
           <div class="record-section">
-            <div class="record-section-title">摘要</div>
-            <textarea id="record-summary" rows="4" class="record-textarea" placeholder="概述策略與觀察"></textarea>
+            <div class="record-section-title">??</div>
+            <textarea id="record-summary" rows="4" class="record-textarea" placeholder="璁膩蝑??撖?></textarea>
           </div>
           <div id="record-bottom" class="hidden"></div>
         </div>
         <div class="record-right-stack space-y-5">
           <div class="record-card-panel">
-            <div class="record-section-title">標籤</div>
+            <div class="record-section-title">璅惜</div>
             <div id="record-tag-chips" class="flex flex-wrap gap-2 mt-3"></div>
           </div>
           <div class="record-card-panel">
-            <div class="record-section-title">新增標籤</div>
+            <div class="record-section-title">?啣?璅惜</div>
             <div class="flex gap-2 mt-3">
-              <input id="tag-edit-input" type="text" placeholder="輸入標籤名稱" class="flex-1 record-input-control bg-white" />
-              <button id="tag-edit-add" type="button" class="bg-black text-white rounded-xl px-4 py-2 text-sm hover:bg-gray-800">新增</button>
+              <input id="tag-edit-input" type="text" placeholder="頛詨璅惜?迂" class="flex-1 record-input-control bg-white" />
+              <button id="tag-edit-add" type="button" class="bg-black text-white rounded-xl px-4 py-2 text-sm hover:bg-gray-800">?啣?</button>
             </div>
             <div id="tag-edit-list" class="flex flex-wrap gap-2 mt-4"></div>
           </div>
           <div class="record-card-panel">
-            <div class="record-section-title">自訂欄位</div>
+            <div class="record-section-title">?芾?甈?</div>
             <div id="record-extra-fields" class="space-y-3 mt-4"></div>
           </div>
         </div>
       </div>
       <div class="record-modal-actions">
-        <button id="record-cancel" class="record-action-btn border border-gray-300 bg-white text-gray-600">取消</button>
-        <button id="record-submit" class="record-action-btn bg-black text-white">建立</button>
+        <button id="record-cancel" class="record-action-btn border border-gray-300 bg-white text-gray-600">??</button>
+        <button id="record-submit" class="record-action-btn bg-black text-white">撱箇?</button>
       </div>
     </div>
   </div>
@@ -318,57 +317,57 @@
   <div id="detail-bg" class="fixed inset-0 bg-black bg-opacity-30 hidden z-[70] flex items-start justify-end">
     <div id="detail-drawer" class="w-full max-w-md bg-white h-full shadow-2xl transform translate-x-full transition-transform duration-300 overflow-y-auto p-8">
       <div class="flex items-center justify-between mb-6">
-        <h2 id="detail-title" class="text-2xl font-bold">交易紀錄詳情</h2>
-        <button id="detail-close" class="text-gray-500 hover:text-gray-800 text-2xl" aria-label="關閉詳情">×</button>
+        <h2 id="detail-title" class="text-2xl font-bold">鈭斗?蝝?底??/h2>
+        <button id="detail-close" class="text-gray-500 hover:text-gray-800 text-2xl" aria-label="??閰單?">?</button>
       </div>
       <div class="mb-6" id="detail-image-area">
-        <img id="detail-image-preview" alt="紀錄截圖" class="w-full rounded-xl border border-gray-300 hidden" />
+        <img id="detail-image-preview" alt="蝝??? class="w-full rounded-xl border border-gray-300 hidden" />
         <div id="detail-image-placeholder" class="text-center text-xs text-gray-400 border border-gray-300 rounded-xl py-12">
-          尚無圖片
+          撠??
         </div>
         <input id="detail-image-input" type="file" class="hidden" accept="image/*" />
       </div>
       <div class="space-y-5">
         <div class="record-line">
-          <label class="record-label">幣種</label>
+          <label class="record-label">撟?車</label>
           <input id="detail-symbol" class="record-input" disabled />
         </div>
         <div class="record-line">
-          <label class="record-label">時間</label>
+          <label class="record-label">??</label>
           <input id="detail-date" type="date" class="record-input" disabled />
         </div>
         <div class="record-line">
-          <label class="record-label">方向</label>
+          <label class="record-label">?孵?</label>
           <select id="detail-side" class="record-input" disabled>
-            <option value="long">做多</option>
-            <option value="short">做空</option>
+            <option value="long">??</option>
+            <option value="short">?征</option>
           </select>
         </div>
         <div class="record-line">
-          <label class="record-label">結果</label>
+          <label class="record-label">蝯?</label>
           <select id="detail-result" class="record-input" disabled>
-            <option value="win">止盈</option>
-            <option value="loss">止損</option>
-            <option value="exit">提前出場</option>
-            <option value="open">持倉中</option>
+            <option value="win">甇Ｙ?</option>
+            <option value="loss">甇Ｘ?</option>
+            <option value="exit">???箏</option>
+            <option value="open">?葉</option>
           </select>
         </div>
         <div class="record-line">
-          <label class="record-label">盈虧</label>
+          <label class="record-label">?</label>
           <input id="detail-pnl" class="record-input" disabled />
         </div>
         <div class="record-line">
-          <label class="record-label">摘要</label>
+          <label class="record-label">??</label>
           <input id="detail-summary" class="record-input" disabled />
         </div>
         <div id="detail-extra-fields" class="space-y-4"></div>
       </div>
       <div class="mt-10 flex justify-between items-center gap-4">
-        <button id="detail-edit" class="px-5 py-2 border border-gray-300 rounded-xl hover:bg-gray-100">編輯</button>
+        <button id="detail-edit" class="px-5 py-2 border border-gray-300 rounded-xl hover:bg-gray-100">蝺刻摩</button>
         <div class="flex gap-3">
-          <button id="detail-delete" class="px-4 py-2 border border-red-300 text-red-600 rounded-xl hover:bg-red-50">刪除</button>
-          <button id="detail-save" class="px-5 py-2 bg-black text-white rounded-xl hover:bg-gray-800 hidden">保存</button>
-          <button id="detail-cancel" class="px-5 py-2 border border-gray-300 rounded-xl hover:bg-gray-100 hidden">取消</button>
+          <button id="detail-delete" class="px-4 py-2 border border-red-300 text-red-600 rounded-xl hover:bg-red-50">?芷</button>
+          <button id="detail-save" class="px-5 py-2 bg-black text-white rounded-xl hover:bg-gray-800 hidden">靽?</button>
+          <button id="detail-cancel" class="px-5 py-2 border border-gray-300 rounded-xl hover:bg-gray-100 hidden">??</button>
         </div>
       </div>
       <div class="mt-10 text-xs text-gray-400" id="detail-id"></div>
@@ -377,18 +376,18 @@
 
   <div id="delete-dialog-bg" class="fixed inset-0 bg-black bg-opacity-40 hidden z-[80] flex items-center justify-center">
     <div id="delete-dialog" class="bg-white rounded-xl shadow-2xl p-6 w-80">
-      <h3 class="text-lg font-semibold mb-4">確認刪除紀錄</h3>
-      <p class="text-sm text-gray-600 mb-6">此操作無法復原。</p>
+      <h3 class="text-lg font-semibold mb-4">蝣箄??芷蝝??/h3>
+      <p class="text-sm text-gray-600 mb-6">甇斗?雿瘜儔??/p>
       <div class="flex justify-end gap-3">
-        <button id="delete-cancel" class="px-4 py-2 border border-gray-300 rounded-xl hover:bg-gray-100">取消</button>
-        <button id="delete-confirm" class="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700">刪除</button>
+        <button id="delete-cancel" class="px-4 py-2 border border-gray-300 rounded-xl hover:bg-gray-100">??</button>
+        <button id="delete-confirm" class="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700">?芷</button>
       </div>
     </div>
   </div>
 
   <div id="confirm-delete-box" style="display:none;">
-    <button id="confirm-yes" aria-hidden="true">是</button>
-    <button id="confirm-no" aria-hidden="true">否</button>
+    <button id="confirm-yes" aria-hidden="true">??/button>
+    <button id="confirm-no" aria-hidden="true">??/button>
   </div>
 
   <script type="module" src="./assets/js/records.js"></script>
@@ -485,38 +484,40 @@
   <div id="profile-modal" class="fixed inset-0 bg-black/30 hidden z-[90] flex items-center justify-center">
     <div class="bg-white w-full max-w-lg border border-gray-200 rounded-2xl shadow-2xl p-8 space-y-6">
       <div class="flex justify-between items-start">
-        <div class="text-xl font-semibold">個人資料</div>
-        <button id="profile-close" class="text-2xl text-gray-500 hover:text-gray-800" aria-label="關閉">×</button>
+        <div class="text-xl font-semibold">?犖鞈?</div>
+        <button id="profile-close" class="text-2xl text-gray-500 hover:text-gray-800" aria-label="??">?</button>
       </div>
       <div class="flex items-center gap-4">
         <div class="w-20 h-20 rounded-full overflow-hidden border border-gray-300 cursor-pointer" id="profile-avatar-box">
-          <img id="profile-avatar" src="" class="w-full h-full object-cover" alt="使用者頭像" />
+          <img id="profile-avatar" src="" class="w-full h-full object-cover" alt="雿輻??? />
         </div>
         <div>
           <div class="font-medium text-lg" id="profile-nick"></div>
           <input id="profile-name-input" type="text" class="hidden mt-2 border border-gray-300 rounded-xl px-3 py-2 text-sm" />
-          <div class="text-sm text-gray-500">UID：<span id="profile-uid">100001</span></div>
-          <button id="profile-edit" class="mt-3 px-3 py-1 border border-gray-300 rounded-xl text-sm hover:bg-gray-100">編輯暱稱</button>
+          <div class="text-sm text-gray-500">UID嚗?span id="profile-uid">100001</span></div>
+          <button id="profile-edit" class="mt-3 px-3 py-1 border border-gray-300 rounded-xl text-sm hover:bg-gray-100">蝺刻摩?梁迂</button>
         </div>
       </div>
       <div class="space-y-3">
         <div class="flex items-center gap-4">
           <span class="text-sm text-gray-600">Telegram</span>
-          <button id="profile-tg" class="px-3 py-1 text-sm border border-gray-300 rounded-xl hover:bg-gray-100">綁定</button>
-          <span id="profile-tg-status" class="text-sm text-green-600 hidden">已綁定：<span id="profile-tg-account"></span></span>
+          <button id="profile-tg" class="px-3 py-1 text-sm border border-gray-300 rounded-xl hover:bg-gray-100">蝬?</button>
+          <span id="profile-tg-status" class="text-sm text-green-600 hidden">撌脩?摰?<span id="profile-tg-account"></span></span>
         </div>
         <div class="flex items-center gap-4">
           <span class="text-sm text-gray-600">Google</span>
-          <button id="profile-google" class="px-3 py-1 text-sm border border-gray-300 rounded-xl hover:bg-gray-100">綁定</button>
-          <span id="profile-google-status" class="text-sm text-green-600 hidden">已綁定：<span id="profile-google-account"></span></span>
+          <button id="profile-google" class="px-3 py-1 text-sm border border-gray-300 rounded-xl hover:bg-gray-100">蝬?</button>
+          <span id="profile-google-status" class="text-sm text-green-600 hidden">撌脩?摰?<span id="profile-google-account"></span></span>
         </div>
       </div>
       <div>
-        <div class="text-sm text-gray-600 mb-2">已連接交易所</div>
+        <div class="text-sm text-gray-600 mb-2">撌脤?鈭斗??</div>
         <div id="profile-exchanges" class="space-y-2 text-sm text-gray-700"></div>
       </div>
-      <button id="profile-logout" class="mt-2 w-full py-2 border border-red-300 text-red-600 rounded-xl text-sm hover:bg-red-50">登出</button>
+      <button id="profile-logout" class="mt-2 w-full py-2 border border-red-300 text-red-600 rounded-xl text-sm hover:bg-red-50">?餃</button>
     </div>
   </div>
 </body>
 </html>
+
+

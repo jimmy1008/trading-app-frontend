@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>個人資料</title>
+  <title>?犖鞈?</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="./assets/css/records.css" />
   <script>
@@ -17,12 +17,12 @@
     <div class="w-full max-w-3xl bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-          <h1 class="text-2xl font-semibold mb-1">個人資料</h1>
-          <p class="text-sm text-gray-500">查看帳號資訊、更新暱稱</p>
+          <h1 class="text-2xl font-semibold mb-1">?犖鞈?</h1>
+          <p class="text-sm text-gray-500">?亦?撣唾?鞈???唳蝔?/p>
         </div>
         <div class="flex items-center gap-3">
-          <a href="index.html" class="px-4 py-2 border border-gray-300 rounded-xl text-sm hover:bg-gray-100 transition">返回儀表板</a>
-          <button id="profile-logout" class="px-4 py-2 bg-black text-white rounded-xl text-sm hover:bg-gray-800 transition">登出</button>
+          <a href="index.html" class="px-4 py-2 border border-gray-300 rounded-xl text-sm hover:bg-gray-100 transition">餈??銵冽</a>
+          <button id="profile-logout" class="px-4 py-2 bg-black text-white rounded-xl text-sm hover:bg-gray-800 transition">?餃</button>
         </div>
       </div>
 
@@ -39,9 +39,9 @@
         </div>
 
         <form id="nickname-form" class="bg-gray-50 rounded-2xl p-4 space-y-3">
-          <label class="text-sm text-gray-600" for="nickname-input">暱稱設定</label>
-          <input id="nickname-input" type="text" class="w-full rounded-xl border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-800" placeholder="輸入新的暱稱">
-          <button type="submit" class="w-full bg-black text-white rounded-xl py-2 text-sm hover:bg-gray-800 transition">更新暱稱</button>
+          <label class="text-sm text-gray-600" for="nickname-input">?梁迂閮剖?</label>
+          <input id="nickname-input" type="text" class="w-full rounded-xl border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-800" placeholder="頛詨?啁??梁迂">
+          <button type="submit" class="w-full bg-black text-white rounded-xl py-2 text-sm hover:bg-gray-800 transition">?湔?梁迂</button>
           <p id="profile-message" class="text-xs text-gray-500"></p>
         </form>
       </div>
@@ -57,7 +57,7 @@
     }
 
     document.getElementById('profile-logout')?.addEventListener('click', () => {
-      if (confirm('確定要登出嗎？')) logout();
+      if (confirm('蝣箏?閬?箏?嚗?)) logout();
     });
 
     async function loadProfile() {
@@ -89,20 +89,20 @@
       if (!token) return logout();
       const nickname = document.getElementById('nickname-input').value.trim();
       if (!nickname) {
-        messageEl.textContent = '請輸入暱稱';
+        messageEl.textContent = '隢撓?交蝔?;
         messageEl.style.color = '#dc2626';
         return;
       }
       try {
         await apiPost("/users/update", { display_name: nickname });
-        messageEl.textContent = '已更新暱稱';
+        messageEl.textContent = '撌脫?唳蝔?;
         messageEl.style.color = '#16a34a';
         const stored = JSON.parse(localStorage.getItem('authUser') || '{}');
         stored.username = nickname;
         localStorage.setItem('authUser', JSON.stringify(stored));
       } catch (err) {
         console.error(err);
-        messageEl.textContent = '更新失敗，請稍後再試';
+        messageEl.textContent = '?湔憭望?嚗?蝔??岫';
         messageEl.style.color = '#dc2626';
       }
     });
@@ -111,3 +111,5 @@
   </script>
 </body>
 </html>
+
+

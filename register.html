@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>µù¥U y1ran</title>
+  <title>è¨»å†Š y1ran</title>
   <style>
     body {
       margin: 0;
@@ -126,54 +126,54 @@
 </head>
 <body>
   <div class="card">
-    <p class="subtitle">«Ø¥ß§Aªº y1ran ±b¸¹</p>
-    <h1 class="title">µù¥U y1ran</h1>
+    <p class="subtitle">å»ºç«‹ä½ çš„ y1ran å¸³è™Ÿ</p>
+    <h1 class="title">è¨»å†Š y1ran</h1>
 
     <div class="form-group">
-      <label for="reg-username">¥Î¤á¦W</label>
-      <input id="reg-username" class="input" type="text" placeholder="¿é¤J¥Î¤á¦W">
+      <label for="reg-username">ç”¨æˆ¶å</label>
+      <input id="reg-username" class="input" type="text" placeholder="è¼¸å…¥ç”¨æˆ¶å">
     </div>
     <div class="form-group">
-      <label for="reg-email">¹q¤l¶l¥ó</label>
+      <label for="reg-email">é›»å­éƒµä»¶</label>
       <input id="reg-email" class="input" type="email" placeholder="name@example.com">
     </div>
     <div class="form-group">
-      <label for="reg-password">±K½X</label>
-      <input id="reg-password" class="input" type="password" placeholder="¿é¤J±K½X">
+      <label for="reg-password">å¯†ç¢¼</label>
+      <input id="reg-password" class="input" type="password" placeholder="è¼¸å…¥å¯†ç¢¼">
     </div>
     <div class="form-group">
-      <label for="reg-password2">¦A¦¸¿é¤J±K½X</label>
-      <input id="reg-password2" class="input" type="password" placeholder="¦A¦¸½T»{±K½X">
+      <label for="reg-password2">å†æ¬¡è¼¸å…¥å¯†ç¢¼</label>
+      <input id="reg-password2" class="input" type="password" placeholder="å†æ¬¡ç¢ºèªå¯†ç¢¼">
     </div>
     <div class="form-group">
-      <label for="reg-invite">ÁÜ½Ğ½X¡]¥i¯dªÅ¡^</label>
-      <input id="reg-invite" class="input" type="text" placeholder="¿ï¶ñ">
+      <label for="reg-invite">é‚€è«‹ç¢¼ï¼ˆå¯ç•™ç©ºï¼‰</label>
+      <input id="reg-invite" class="input" type="text" placeholder="é¸å¡«">
     </div>
     <div class="form-group">
-      <label>©Ê§O</label>
+      <label>æ€§åˆ¥</label>
       <div class="gender-row">
-        <label><input type="radio" name="gender" value="male" checked> ¨k</label>
-        <label><input type="radio" name="gender" value="female"> ¤k</label>
-        <label><input type="radio" name="gender" value="custom"> ¦Û­q</label>
+        <label><input type="radio" name="gender" value="male" checked> ç”·</label>
+        <label><input type="radio" name="gender" value="female"> å¥³</label>
+        <label><input type="radio" name="gender" value="custom"> è‡ªè¨‚</label>
         <select id="gender-custom" class="select">
-          <option value="¦Û­q">¦Û­q</option>
-          <option value="§ß¥L">§ß¥L</option>
-          <option value="¨k®Q">¨k®Q</option>
-          <option value="¤H§¯">¤H§¯</option>
-          <option value="¨ä¥L">¨ä¥L</option>
+          <option value="è‡ªè¨‚">è‡ªè¨‚</option>
+          <option value="æ‰¶ä»–">æ‰¶ä»–</option>
+          <option value="ç”·å¨˜">ç”·å¨˜</option>
+          <option value="äººå¦–">äººå¦–</option>
+          <option value="å…¶ä»–">å…¶ä»–</option>
         </select>
       </div>
     </div>
     <div class="checkbox-row">
       <input type="checkbox" id="adult-check">
-      <label for="adult-check">§Ú¤wº¡ 18 ·³</label>
+      <label for="adult-check">æˆ‘å·²æ»¿ 18 æ­²</label>
     </div>
 
-    <button id="register-btn" class="btn" type="button">µù¥U</button>
+    <button id="register-btn" class="btn" type="button">è¨»å†Š</button>
     <div id="register-message"></div>
 
     <div class="toggle-link">
-      ¤w¸g¦³±b¸¹¡H<a href="login.html">µn¤J</a>
+      å·²ç¶“æœ‰å¸³è™Ÿï¼Ÿ<a href="login.html">ç™»å…¥</a>
     </div>
   </div>
 
@@ -213,21 +213,21 @@
       let genderValue = document.querySelector("input[name='gender']:checked").value;
 
       if (genderValue === "custom") {
-        genderValue = genderSelect.value || "¦Û­q";
+        genderValue = genderSelect.value || "è‡ªè¨‚";
       }
 
       if (!username || !email || !password || !password2) {
-        setMessage("½Ğ§¹¾ã¶ñ¼g©Ò¦³Äæ¦ì", "error");
+        setMessage("è«‹å®Œæ•´å¡«å¯«æ‰€æœ‰æ¬„ä½", "error");
         return;
       }
 
       if (password !== password2) {
-        setMessage("¨â¦¸¿é¤Jªº±K½X¤£¤@­P", "error");
+        setMessage("å…©æ¬¡è¼¸å…¥çš„å¯†ç¢¼ä¸ä¸€è‡´", "error");
         return;
       }
 
       try {
-        setMessage("µù¥U¤¤...", "info");
+        setMessage("è¨»å†Šä¸­...", "info");
         const data = await apiPostJson("/auth/register", {
           username,
           email,
@@ -241,7 +241,7 @@
         window.location.href = "index.html";
       } catch (err) {
         console.error(err);
-        setMessage("µù¥U¥¢±Ñ¡A½Ğµy«á¦A¸Õ", "error");
+        setMessage("è¨»å†Šå¤±æ•—ï¼Œè«‹ç¨å¾Œå†è©¦", "error");
       }
     });
   </script>
