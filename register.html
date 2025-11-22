@@ -41,14 +41,15 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
     .form-group label {
       font-size: 14px;
       font-weight: 600;
       color: #4b5563;
     }
-    .input {
+    .input,
+    .select {
       height: 48px;
       border-radius: 12px;
       border: 1px solid #d1d5db;
@@ -72,18 +73,18 @@
       gap: 6px;
       font-weight: 500;
     }
-    .gender-row .custom-input {
+    .gender-row select {
+      width: 180px;
       display: none;
-      width: 160px;
     }
-    .gender-row .custom-input.active {
+    .gender-row select.active {
       display: block;
     }
     .checkbox-row {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 10px;
+      margin-top: 8px;
       font-size: 14px;
       color: #374151;
     }
@@ -155,7 +156,12 @@
         <label><input type="radio" name="gender" value="male" checked> 男</label>
         <label><input type="radio" name="gender" value="female"> 女</label>
         <label><input type="radio" name="gender" value="custom"> 自訂</label>
-        <input id="gender-custom" class="input custom-input" type="text" placeholder="輸入自訂性別">
+        <select id="gender-custom" class="select">
+          <option value="自訂">自訂</option>
+          <option value="扶他">扶他</option>
+          <option value="男娘">男娘</option>
+          <option value="人妖">人妖</option>
+        </select>
       </div>
     </div>
     <div class="checkbox-row">
@@ -175,7 +181,7 @@
     import { apiPostJson } from "./js/api.js";
 
     const genderRadios = document.querySelectorAll("input[name='gender']");
-    const genderCustomInput = document.getElementById("gender-custom");
+    const genderCustomSelect = document.getElementById("gender-custom");
     const messageEl = document.getElementById("register-message");
     const registerBtn = document.getElementById("register-btn");
 
@@ -184,21 +190,20 @@
       messageEl.style.color = type === "error" ? "#dc2626" : "#16a34a";
     }
 
-    function syncGenderInput() {
+    function syncGenderSelect() {
       const selected = document.querySelector("input[name='gender']:checked").value;
       if (selected === "custom") {
-        genderCustomInput.classList.add("active");
-        genderCustomInput.disabled = false;
-        genderCustomInput.focus();
+        genderCustomSelect.classList.add("active");
+        genderCustomSelect.disabled = false;
       } else {
-        genderCustomInput.classList.remove("active");
-        genderCustomInput.disabled = true;
-        genderCustomInput.value = "";
+        genderCustomSelect.classList.remove("active");
+        genderCustomSelect.disabled = true;
+        genderCustomSelect.value = "自訂";
       }
     }
 
-    genderRadios.forEach(radio => radio.addEventListener("change", syncGenderInput));
-    syncGenderInput();
+    genderRadios.forEach(radio => radio.addEventListener("change", syncGenderSelect));
+    syncGenderSelect();
 
     registerBtn.addEventListener("click", async () => {
       const username = document.getElementById("reg-username").value.trim();
@@ -209,7 +214,7 @@
       let genderValue = document.querySelector("input[name='gender']:checked").value;
 
       if (genderValue === "custom") {
-        genderValue = genderCustomInput.value.trim() || "自訂";
+        genderValue = genderCustomSelect.value || "自訂";
       }
 
       if (!username || !email || !password || !password2) {
