@@ -1,7 +1,9 @@
 // === 全域 API Base，自動依部署或本機切換 ===
-export const API_BASE = window.location.hostname.includes("y1ran.app")
-  ? "https://api.y1ran.app"
-  : "http://localhost:3000";
+const host = window.location.hostname;
+export const API_BASE =
+  host === "y1ran.app" || host.endsWith(".y1ran.app")
+    ? "https://api.y1ran.app"
+    : "http://localhost:3000";
 
 // === localStorage key ===
 export const TOKEN_KEY = "token";
