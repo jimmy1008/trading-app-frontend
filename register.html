@@ -1,9 +1,9 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>è¨»å†Š y1ran</title>
+  <title>µù¥U y1ran</title>
   <style>
     body {
       margin: 0;
@@ -48,8 +48,7 @@
       font-weight: 600;
       color: #4b5563;
     }
-    .input,
-    .select {
+    .input {
       height: 48px;
       border-radius: 12px;
       border: 1px solid #d1d5db;
@@ -73,11 +72,12 @@
       gap: 6px;
       font-weight: 500;
     }
-    .gender-row select {
-      width: 150px;
-    }
-    .gender-row select:not(.active) {
+    .gender-row .custom-input {
       display: none;
+      width: 160px;
+    }
+    .gender-row .custom-input.active {
+      display: block;
     }
     .checkbox-row {
       display: flex;
@@ -126,54 +126,48 @@
 </head>
 <body>
   <div class="card">
-    <p class="subtitle">å»ºç«‹ä½ çš„ y1ran å¸³è™Ÿ</p>
-    <h1 class="title">è¨»å†Š y1ran</h1>
+    <p class="subtitle">«Ø¥ß§Aªº y1ran ±b¸¹</p>
+    <h1 class="title">µù¥U y1ran</h1>
 
     <div class="form-group">
-      <label for="reg-username">ç”¨æˆ¶å</label>
-      <input id="reg-username" class="input" type="text" placeholder="è¼¸å…¥ç”¨æˆ¶å">
+      <label for="reg-username">¥Î¤á¦W</label>
+      <input id="reg-username" class="input" type="text" placeholder="¿é¤J¥Î¤á¦W">
     </div>
     <div class="form-group">
-      <label for="reg-email">é›»å­éƒµä»¶</label>
+      <label for="reg-email">¹q¤l¶l¥ó</label>
       <input id="reg-email" class="input" type="email" placeholder="name@example.com">
     </div>
     <div class="form-group">
-      <label for="reg-password">å¯†ç¢¼</label>
-      <input id="reg-password" class="input" type="password" placeholder="è¼¸å…¥å¯†ç¢¼">
+      <label for="reg-password">±K½X</label>
+      <input id="reg-password" class="input" type="password" placeholder="¿é¤J±K½X">
     </div>
     <div class="form-group">
-      <label for="reg-password2">å†æ¬¡è¼¸å…¥å¯†ç¢¼</label>
-      <input id="reg-password2" class="input" type="password" placeholder="å†æ¬¡ç¢ºèªå¯†ç¢¼">
+      <label for="reg-password2">¦A¦¸¿é¤J±K½X</label>
+      <input id="reg-password2" class="input" type="password" placeholder="¦A¦¸½T»{±K½X">
     </div>
     <div class="form-group">
-      <label for="reg-invite">é‚€è«‹ç¢¼ï¼ˆå¯ç•™ç©ºï¼‰</label>
-      <input id="reg-invite" class="input" type="text" placeholder="é¸å¡«">
+      <label for="reg-invite">ÁÜ½Ğ½X¡]¥i¯dªÅ¡^</label>
+      <input id="reg-invite" class="input" type="text" placeholder="¿ï¶ñ">
     </div>
     <div class="form-group">
-      <label>æ€§åˆ¥</label>
+      <label>©Ê§O</label>
       <div class="gender-row">
-        <label><input type="radio" name="gender" value="male" checked> ç”·</label>
-        <label><input type="radio" name="gender" value="female"> å¥³</label>
-        <label><input type="radio" name="gender" value="custom"> è‡ªè¨‚</label>
-        <select id="gender-custom" class="select">
-          <option value="è‡ªè¨‚">è‡ªè¨‚</option>
-          <option value="æ‰¶ä»–">æ‰¶ä»–</option>
-          <option value="ç”·å¨˜">ç”·å¨˜</option>
-          <option value="äººå¦–">äººå¦–</option>
-          <option value="å…¶ä»–">å…¶ä»–</option>
-        </select>
+        <label><input type="radio" name="gender" value="male" checked> ¨k</label>
+        <label><input type="radio" name="gender" value="female"> ¤k</label>
+        <label><input type="radio" name="gender" value="custom"> ¦Û­q</label>
+        <input id="gender-custom" class="input custom-input" type="text" placeholder="¿é¤J¦Û­q©Ê§O">
       </div>
     </div>
     <div class="checkbox-row">
       <input type="checkbox" id="adult-check">
-      <label for="adult-check">æˆ‘å·²æ»¿ 18 æ­²</label>
+      <label for="adult-check">§Ú¤wº¡ 18 ·³</label>
     </div>
 
-    <button id="register-btn" class="btn" type="button">è¨»å†Š</button>
+    <button id="register-btn" class="btn" type="button">µù¥U</button>
     <div id="register-message"></div>
 
     <div class="toggle-link">
-      å·²ç¶“æœ‰å¸³è™Ÿï¼Ÿ<a href="login.html">ç™»å…¥</a>
+      ¤w¸g¦³±b¸¹¡H<a href="login.html">µn¤J</a>
     </div>
   </div>
 
@@ -181,7 +175,7 @@
     import { apiPostJson } from "./js/api.js";
 
     const genderRadios = document.querySelectorAll("input[name='gender']");
-    const genderSelect = document.getElementById("gender-custom");
+    const genderCustomInput = document.getElementById("gender-custom");
     const messageEl = document.getElementById("register-message");
     const registerBtn = document.getElementById("register-btn");
 
@@ -190,19 +184,21 @@
       messageEl.style.color = type === "error" ? "#dc2626" : "#16a34a";
     }
 
-    function syncGenderSelect() {
+    function syncGenderInput() {
       const selected = document.querySelector("input[name='gender']:checked").value;
       if (selected === "custom") {
-        genderSelect.classList.add("active");
-        genderSelect.disabled = false;
+        genderCustomInput.classList.add("active");
+        genderCustomInput.disabled = false;
+        genderCustomInput.focus();
       } else {
-        genderSelect.classList.remove("active");
-        genderSelect.disabled = true;
+        genderCustomInput.classList.remove("active");
+        genderCustomInput.disabled = true;
+        genderCustomInput.value = "";
       }
     }
 
-    genderRadios.forEach(radio => radio.addEventListener("change", syncGenderSelect));
-    syncGenderSelect();
+    genderRadios.forEach(radio => radio.addEventListener("change", syncGenderInput));
+    syncGenderInput();
 
     registerBtn.addEventListener("click", async () => {
       const username = document.getElementById("reg-username").value.trim();
@@ -213,21 +209,21 @@
       let genderValue = document.querySelector("input[name='gender']:checked").value;
 
       if (genderValue === "custom") {
-        genderValue = genderSelect.value || "è‡ªè¨‚";
+        genderValue = genderCustomInput.value.trim() || "¦Û­q";
       }
 
       if (!username || !email || !password || !password2) {
-        setMessage("è«‹å®Œæ•´å¡«å¯«æ‰€æœ‰æ¬„ä½", "error");
+        setMessage("½Ğ§¹¾ã¶ñ¼g©Ò¦³Äæ¦ì", "error");
         return;
       }
 
       if (password !== password2) {
-        setMessage("å…©æ¬¡è¼¸å…¥çš„å¯†ç¢¼ä¸ä¸€è‡´", "error");
+        setMessage("¨â¦¸¿é¤Jªº±K½X¤£¤@­P", "error");
         return;
       }
 
       try {
-        setMessage("è¨»å†Šä¸­...", "info");
+        setMessage("µù¥U¤¤...", "info");
         const data = await apiPostJson("/auth/register", {
           username,
           email,
@@ -241,7 +237,7 @@
         window.location.href = "index.html";
       } catch (err) {
         console.error(err);
-        setMessage("è¨»å†Šå¤±æ•—ï¼Œè«‹ç¨å¾Œå†è©¦", "error");
+        setMessage("µù¥U¥¢±Ñ¡A½Ğµy«á¦A¸Õ", "error");
       }
     });
   </script>
