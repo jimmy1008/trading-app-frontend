@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ÁôªÂÖ• Dashboard</title>
+  <title>µn§J y1ran</title>
   <style>
     :root { color-scheme: light; }
     body {
@@ -92,10 +92,29 @@
       height: 1px;
       background: #e5e7eb;
     }
-    #google-signin {
+    .social-btn {
       width: 100%;
+      background-color: #54A9EB;
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 40px;
+      border: none;
       display: flex;
+      align-items: center;
       justify-content: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .social-btn:hover {
+      background-color: #4a97d3;
+      box-shadow: 0 8px 20px rgba(84, 169, 235, 0.35);
+    }
+    .social-btn .icon {
+      width: 24px;
+      height: 24px;
     }
     #telegram-login-box {
       width: 100%;
@@ -113,31 +132,41 @@
       font-size: 13px;
       color: #6b7280;
     }
-    .toggle-link span {
+    .toggle-link a {
       color: #111827;
       font-weight: 600;
-      cursor: pointer;
+      text-decoration: none;
     }
   </style>
+  <script>
+    if (window.location.hostname === "y1ran.app" && window.location.protocol !== "https:") {
+      window.location.href = "https://" + window.location.hostname + window.location.pathname + window.location.search;
+    }
+  </script>
 </head>
 <body>
   <div class="card">
-    <p class="subtitle">‰ΩøÁî®‰ªª‰ΩïÊñπÂºèÁôªÂÖ• dashboard</p>
-    <h1 class="title">Dashboard</h1>
+    <p class="subtitle">®œ•Œ•Ù∑N§Ë¶°µn§J y1ran</p>
+    <h1 class="title">y1ran</h1>
 
     <div class="form-section">
       <div class="form-group">
-        <label for="login-username">Áî®Êà∂Âêç</label>
-        <input id="login-username" class="input" type="text" placeholder="Ëº∏ÂÖ•Áî®Êà∂Âêç">
+        <label for="login-username">•Œ§·¶W</label>
+        <input id="login-username" class="input" type="text" placeholder="øÈ§J•Œ§·¶W">
       </div>
       <div class="form-group">
-        <label for="login-password">ÂØÜÁ¢º</label>
-        <input id="login-password" class="input" type="password" placeholder="Ëº∏ÂÖ•ÂØÜÁ¢º">
+        <label for="login-password">±KΩX</label>
+        <input id="login-password" class="input" type="password" placeholder="øÈ§J±KΩX">
       </div>
-      <button id="login-btn" class="btn" type="button">ÁôªÂÖ•</button>
+      <button id="login-btn" class="btn" type="button">µn§J</button>
 
-      <div class="divider">Êàñ‰ΩøÁî®</div>
-      <div id="google-signin"></div>
+      <div class="divider">©Œ®œ•Œ</div>
+      <button id="google-login-btn" class="social-btn" type="button">
+        <svg class="icon" viewBox="0 0 488 512" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#fff" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.4 64.9C258.4 52.4 94.3 116.6 94.3 256c0 86.5 69.9 157.5 153.7 157.5 98.2 0 135-70.3 140.8-106.8H248v-85.3h236.1c2.3 12.4 3.9 24.5 3.9 40.4z"/>
+        </svg>
+        ®œ•Œ Google ±b§·µn§J
+      </button>
       <div id="telegram-login-box">
         <script async
           src="https://telegram.org/js/telegram-widget.js?22"
@@ -152,7 +181,7 @@
 
     <div id="login-message"></div>
     <div class="toggle-link">
-      Ê≤íÊúâÂ∏≥ËôüÔºü<span><a href="register.html" style="text-decoration:none;color:inherit;">Ë®ªÂÜä</a></span>
+      ®S¶≥±b∏π°H<a href="register.html">µ˘•U</a>
     </div>
   </div>
 
@@ -161,6 +190,8 @@
 
     const loginBtn = document.getElementById("login-btn");
     const messageEl = document.getElementById("login-message");
+    const googleLoginBtn = document.getElementById("google-login-btn");
+    let googleReady = false;
 
     function setMessage(text, type = "info") {
       if (!messageEl) return;
@@ -173,19 +204,19 @@
       const password = document.getElementById("login-password").value;
 
       if (!username || !password) {
-        setMessage("Ë´ãËº∏ÂÖ•Â∏≥ËôüËàáÂØÜÁ¢º", "error");
+        setMessage("Ω–øÈ§J±b∏πªP±KΩX", "error");
         return;
       }
 
       try {
-        setMessage("ÁôªÂÖ•‰∏≠...", "info");
+        setMessage("µn§J§§...", "info");
         const data = await apiPostJson("/auth/login", { username, password });
         localStorage.setItem("token", data.token);
         localStorage.setItem("authUser", JSON.stringify(data.user));
         window.location.href = "index.html";
       } catch (err) {
         console.error(err);
-        setMessage("ÁôªÂÖ•Â§±ÊïóÔºåË´ãÁ¢∫Ë™çÂ∏≥ÂØÜ", "error");
+        setMessage("µn§J•¢±—°AΩ–ΩTª{±b±K", "error");
       }
     });
 
@@ -194,48 +225,52 @@
         if (!response || !response.credential) {
           throw new Error("Missing Google credential");
         }
-        setMessage("ÁôªÂÖ•‰∏≠...", "info");
+        setMessage("µn§J§§...", "info");
         const data = await apiPostJson("/auth/google", { idToken: response.credential });
         localStorage.setItem("token", data.token);
         localStorage.setItem("authUser", JSON.stringify(data.user));
         window.location.href = "index.html";
       } catch (err) {
         console.error(err);
-        setMessage("Google ÁôªÂÖ•Â§±ÊïóÔºåË´ãÁ®çÂæåÂÜçË©¶", "error");
+        setMessage("Google µn§J•¢±—°AΩ–µy´·¶A∏’", "error");
       }
     };
 
+    const triggerGooglePrompt = () => {
+      if (googleReady && window.google?.accounts?.id) {
+        window.google.accounts.id.prompt();
+      }
+    };
+
+    googleLoginBtn?.addEventListener("click", triggerGooglePrompt);
+
     window.onTelegramAuth = async function onTelegramAuth(user) {
       try {
-        setMessage("ÁôªÂÖ•‰∏≠...", "info");
+        setMessage("µn§J§§...", "info");
         const data = await apiPostJson("/auth/telegram", user);
         localStorage.setItem("token", data.token);
         localStorage.setItem("authUser", JSON.stringify(data.user));
         window.location.href = "index.html";
       } catch (err) {
         console.error(err);
-        setMessage("Telegram ÁôªÂÖ•Â§±ÊïóÔºåË´ãÁ®çÂæåÂÜçË©¶", "error");
+        setMessage("Telegram µn§J•¢±—°AΩ–µy´·¶A∏’", "error");
       }
     };
-  </script>
 
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script>
     window.addEventListener("load", () => {
       const interval = setInterval(() => {
         if (window.google?.accounts?.id) {
-          google.accounts.id.initialize({
+          window.google.accounts.id.initialize({
             client_id: "777320476444-89anlckf3uipogs3h9isg4tkr347ap6u.apps.googleusercontent.com",
             callback: window.handleCredentialResponse
           });
-          google.accounts.id.renderButton(
-            document.getElementById("google-signin"),
-            { theme: "outline", size: "large" }
-          );
+          googleReady = true;
           clearInterval(interval);
         }
       }, 100);
     });
   </script>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </body>
 </html>

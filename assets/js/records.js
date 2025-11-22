@@ -126,7 +126,7 @@ async function refreshRecordsFromApi() {
         renderRecordCards(list);
     } catch (err) {
         console.error(err);
-        alert("無法載入紀錄，請重新登入");
+        alert("?��?載入紀?��?請�??�登??);
         tradeRecords = [];
         renderRecords();
     }
@@ -330,12 +330,12 @@ async function handleRecordSubmit() {
     try {
         const created = await apiPost("/records", buildRecordPayload(data));
         upsertRecord(created);
-        alert("新增成功");
+        alert("?��??��?");
         resetRecordModal();
         closeRecordModal();
     } catch (err) {
         console.error(err);
-        alert("建立紀錄失敗，請稍後再試");
+        alert("建�?紀?�失?��?請�?後�?�?);
     }
 }
 
@@ -373,7 +373,7 @@ function renderRecords() {
 
     if (list.length === 0) {
         box.innerHTML = `<div class="no-record">\u5c1a\u7121\u7d00\u9304</div>`;
-        renderDashboardInsights();
+        rendery1ranInsights();
         return;
     }
 
@@ -388,7 +388,7 @@ function renderRecords() {
             : `<div class="record-card-placeholder"><span class="placeholder-icon"></span></div>`;
         const sideLabel = SIDE_LABELS[r.side] || (r.side || "-");
 
-        const summary = r.summary ? r.summary : "無摘要資訊";
+        const summary = r.summary ? r.summary : "?��?要�?�?;
         const tagList = Object.keys(r.extra || {});
         const hoverTags = tagList.length
             ? `<div class="record-hover-tags">${tagList.slice(0,3).map(tag => `<span class="record-hover-tag">${tag}</span>`).join("")}</div>`
@@ -417,7 +417,7 @@ function renderRecords() {
         box.appendChild(card);
     });
 
-    renderDashboardInsights();
+    rendery1ranInsights();
 }
 
 let draggingId = null;
@@ -663,11 +663,11 @@ async function saveDetail() {
         upsertRecord(response);
         detailDirty = false;
         detailInitial = JSON.stringify(normalizeRecord(response));
-        alert("已更新");
+        alert("已更??);
         closeDetail();
     } catch (err) {
         console.error(err);
-        alert("更新失敗，請稍後再試");
+        alert("?�新失�?，�?稍�??�試");
     }
 }
 
@@ -716,11 +716,11 @@ async function confirmDeleteYes() {
     try {
         await apiDelete(`/records/${editingId}`);
         removeRecordById(editingId);
-        alert("已刪除");
+        alert("已刪??);
         closeDetail();
     } catch (err) {
         console.error(err);
-        alert("刪除失敗，請稍後再試");
+        alert("?�除失�?，�?稍�??�試");
     } finally {
         const dialog = $id("delete-dialog-bg");
         if (dialog) dialog.style.display = "none";
@@ -861,7 +861,7 @@ function renderTagEditList() {
     customTags.forEach(tag => {
         const chip = document.createElement("div");
         chip.className = "tag-edit-item";
-        chip.innerHTML = `<span>${tag}</span><span class="tag-edit-remove" data-tag="${tag}">×</span>`;
+        chip.innerHTML = `<span>${tag}</span><span class="tag-edit-remove" data-tag="${tag}">?</span>`;
         list.appendChild(chip);
     });
 
@@ -935,7 +935,7 @@ function formatChange(value) {
     return `${sign}${num} USDT`;
 }
 
-function renderDashboardInsights() {
+function rendery1ranInsights() {
     renderTodayOverview();
     renderSpotlight();
     renderTimeline();
@@ -987,7 +987,7 @@ function renderSpotlight() {
     if (!card) return;
     if (!tradeRecords.length) {
         card.classList.add("empty");
-        card.innerHTML = '<div class="spotlight-empty">暫無紀錄</div>';
+        card.innerHTML = '<div class="spotlight-empty">?�無紀??/div>';
         card.onclick = null;
         card.removeAttribute("data-id");
         return;
@@ -996,7 +996,7 @@ function renderSpotlight() {
     const latest = tradeRecords.slice().sort((a, b) => b.id - a.id)[0];
     const image = latest.image
         ? `<img src="${latest.image}" alt="${latest.symbol}">`
-        : '<div class="spotlight-empty">無圖片</div>';
+        : '<div class="spotlight-empty">?��???/div>';
     const pnlValue = parseNumber(latest.pnl);
     const pnlClass = pnlValue >= 0 ? "pnl-positive" : "pnl-negative";
     const sideLabel = SIDE_LABELS[normalizeSide(latest.side)] || latest.side || "-";
@@ -1053,7 +1053,7 @@ function showTimelineDetails(item) {
     if (!details) return;
     details.classList.remove("hidden");
     if (!item || !item.list.length) {
-        details.innerHTML = '<div class="activity-card">當日無交易</div>';
+        details.innerHTML = '<div class="activity-card">?�日?�交??/div>';
         return;
     }
     details.innerHTML = "";
@@ -1110,7 +1110,7 @@ function renderBestWorst() {
     const renderList = (container, list) => {
         container.innerHTML = "";
         if (!list.length) {
-            container.innerHTML = '<div class="result-item text-gray-400 cursor-default">暫無資料</div>';
+            container.innerHTML = '<div class="result-item text-gray-400 cursor-default">?�無資�?</div>';
             return;
         }
         list.forEach(record => {
@@ -1127,3 +1127,4 @@ function renderBestWorst() {
     renderList(bestContainer, best);
     renderList(worstContainer, worst);
 }
+

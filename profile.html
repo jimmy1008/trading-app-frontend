@@ -6,6 +6,11 @@
   <title>個人資料</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="./assets/css/records.css" />
+  <script>
+    if (window.location.hostname === "y1ran.app" && window.location.protocol !== "https:") {
+      window.location.href = "https://" + window.location.hostname + window.location.pathname + window.location.search;
+    }
+  </script>
 </head>
 <body class="bg-gray-50 text-gray-900">
   <div class="min-h-screen flex flex-col items-center py-12 px-4">
@@ -45,8 +50,6 @@
 
   <script type="module">
     import { apiGet, apiPost, logout as apiLogout } from "./js/api.js";
-
-    const BACKEND_URL = "http://localhost:3000";
     const messageEl = document.getElementById('profile-message');
 
     function logout() {

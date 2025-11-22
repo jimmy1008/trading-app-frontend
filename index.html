@@ -7,6 +7,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="stylesheet" href="./assets/css/records.css" />
+  <script>
+    if (window.location.hostname === "y1ran.app" && window.location.protocol !== "https:") {
+      window.location.href = "https://" + window.location.hostname + window.location.pathname + window.location.search;
+    }
+  </script>
 </head>
 <body class="bg-white text-black">
   <aside class="w-64 px-6 py-8 flex flex-col border-r border-gray-200 fixed inset-y-0 bg-white z-20">
@@ -443,7 +448,6 @@
       }
     })();
 
-    const BACKEND_URL = "http://localhost:3000";
     const navEmail = document.getElementById('nav-email');
     const logoutBtn = document.getElementById('nav-logout');
 
