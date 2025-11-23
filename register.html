@@ -2,11 +2,22 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Expires" content="0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>註冊 y1ran</title>
+  <script>
+    const V = Date.now();
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll("link[data-cache-bust], script[data-cache-bust]").forEach(el => {
+        const attr = el.tagName === "LINK" ? "href" : "src";
+        const url = new URL(el.getAttribute(attr), location.origin);
+        url.searchParams.set("v", V);
+        el.setAttribute(attr, url.toString());
+      });
+    });
+  </script>
   <style>
     body {
       margin: 0;
@@ -144,8 +155,8 @@
     <div class="form-group">
       <label for="reg-password">密碼</label>
       <input id="reg-password" class="input" type="password" placeholder="輸入密碼">
-      <p class="text-gray-500 text-sm mt-1">
-        密碼需包含：至少一個大寫英文、至少一個小寫英文、至少一個數字、至少一個特殊符號（例如 @#$%^&*），長度需為 8–16 字元
+      <p class="text-gray-500 text-sm mt-1 leading-snug">
+        密碼需包含至少一個大寫英文、小寫英文、數字、特殊符號（例如 @#$%^&*），長度需為 8–16 字元
       </p>
     </div>
     <div class="form-group">
