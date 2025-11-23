@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Expires" content="0">
   <title>註冊 y1ran</title>
   <style>
     body {
@@ -141,6 +144,9 @@
     <div class="form-group">
       <label for="reg-password">密碼</label>
       <input id="reg-password" class="input" type="password" placeholder="輸入密碼">
+      <p class="text-xs text-gray-500 mt-1">
+        密碼需包含：至少一個大寫英文、至少一個小寫英文、至少一個數字、至少一個特殊符號（例如 @#$%^&*），長度 8–16 字元
+      </p>
     </div>
     <div class="form-group">
       <label for="reg-password2">再次輸入密碼</label>
@@ -213,7 +219,7 @@
       const invite = document.getElementById("reg-invite").value.trim();
       let genderValue = document.querySelector("input[name='gender']:checked").value;
 
-      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,16}$/;
+      const passRule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,16}$/;
 
       if (genderValue === "custom") {
         genderValue = genderCustomSelect.value || "自訂";
@@ -224,8 +230,10 @@
         return;
       }
 
-      if (!passwordPattern.test(password)) {
-        alert("密碼需包含大小寫英文、數字與特殊符號，長度須為 8-16 字元");
+      if (!passRule.test(password)) {
+        alert("密碼需包含大寫、小寫、數字與特殊符號，長度 8–16 字元");
+        registerBtn.disabled = false;
+        registerBtn.textContent = "註冊";
         return;
       }
 
@@ -258,7 +266,7 @@
         } else if (apiError === "email_exists") {
           alert("此 Email 已被使用，請換一個 Email");
         } else if (apiError === "weak_password") {
-          alert("密碼強度不足，需包含大小寫英文、數字與特殊符號，長度 8–16 字元");
+          alert("密碼強度不足，需包含大寫、小寫、數字與特殊符號，長度 8–16 字元");
         } else {
           alert("註冊失敗，請稍後再試");
         }
