@@ -213,12 +213,19 @@
       const invite = document.getElementById("reg-invite").value.trim();
       let genderValue = document.querySelector("input[name='gender']:checked").value;
 
+      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,16}$/;
+
       if (genderValue === "custom") {
         genderValue = genderCustomSelect.value || "自訂";
       }
 
       if (!username || !email || !password || !password2) {
         setMessage("請完整填寫所有欄位", "error");
+        return;
+      }
+
+      if (!passwordPattern.test(password)) {
+        alert("密碼需包含大小寫英文、數字與特殊符號，長度須為 8-16 字元");
         return;
       }
 
@@ -250,6 +257,8 @@
           alert("此帳號已被使用，請換一個帳號");
         } else if (apiError === "email_exists") {
           alert("此 Email 已被使用，請換一個 Email");
+        } else if (apiError === "weak_password") {
+          alert("密碼強度不足，需包含大小寫英文、數字與特殊符號，長度 8–16 字元");
         } else {
           alert("註冊失敗，請稍後再試");
         }
