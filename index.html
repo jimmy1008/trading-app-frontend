@@ -2,11 +2,30 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    const VERSION = Date.now();
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('link[data-cache-bust],script[data-cache-bust]').forEach(el => {
+        const attr = el.tagName === 'LINK' ? 'href' : 'src';
+        const val = el.getAttribute(attr);
+        if (!val) return;
+        try {
+          const url = new URL(val, location.origin);
+          if (url.origin !== location.origin) return;
+          url.searchParams.set('v', VERSION);
+          el.setAttribute(attr, url.toString());
+        } catch (e) {}
+      });
+    });
+  </script>
   <title>鈭斗??批?銵冽</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <link rel="stylesheet" href="./assets/css/records.css" />
+  <link rel="stylesheet" href="./assets/css/records.css" data-cache-bust="true" />
   <script>
     if (window.location.hostname === "y1ran.app" && window.location.protocol !== "https:") {
       window.location.href = "https://" + window.location.hostname + window.location.pathname + window.location.search;
