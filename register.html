@@ -10,11 +10,19 @@
   <script>
     const V = Date.now();
     document.addEventListener("DOMContentLoaded", () => {
-      document.querySelectorAll("link[data-cache-bust], script[data-cache-bust]").forEach(el => {
+      document.querySelectorAll("link, script").forEach(el => {
         const attr = el.tagName === "LINK" ? "href" : "src";
-        const url = new URL(el.getAttribute(attr), location.origin);
-        url.searchParams.set("v", V);
-        el.setAttribute(attr, url.toString());
+        const val = el.getAttribute(attr);
+        if (!val) return;
+        try {
+          const url = new URL(val, location.origin);
+          // 只處理同網域或相對路徑資源
+          if (url.origin !== location.origin) return;
+          url.searchParams.set("v", V);
+          el.setAttribute(attr, url.toString());
+        } catch (e) {
+          // ignore invalid URLs
+        }
       });
     });
   </script>
