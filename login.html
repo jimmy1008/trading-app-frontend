@@ -218,14 +218,25 @@
       setMessage("登入中...", "info");
       axios.post(`${API_BASE}/auth/google`, { credential: response.credential })
         .then(res => {
-          const { token, user } = res.data;
+          const { token, user, error } = res.data;
+          if (error === "google_not_bound") {
+            alert("尚未綁定，請先帳密登入後綁定 Google");
+            setMessage("尚未綁定 Google，請先帳密登入後綁定", "error");
+            return;
+          }
+          if (!token || !user) {
+            throw new Error("invalid_response");
+          }
           localStorage.setItem("token", token);
           localStorage.setItem("authUser", JSON.stringify(user));
           window.location.href = "index.html";
         })
         .catch(err => {
           console.error(err);
-          setMessage("Google 登入失敗，請稍後再試", "error");
+          const msg = err.response?.data?.error === "google_not_bound"
+            ? "尚未綁定，請先帳密登入後綁定 Google"
+            : "Google 登入失敗，請稍後再試";
+          setMessage(msg, "error");
         });
     };
 
@@ -233,12 +244,20 @@
       try {
         setMessage("登入中...", "info");
         const data = await apiPostJson("/auth/telegram", user);
+        if (data?.error === "telegram_not_bound") {
+          setMessage("尚未綁定 Telegram，請先帳密登入後綁定", "error");
+          alert("尚未綁定，請先帳密登入後綁定 Telegram");
+          return;
+        }
         localStorage.setItem("token", data.token);
         localStorage.setItem("authUser", JSON.stringify(data.user));
         window.location.href = "index.html";
       } catch (err) {
         console.error(err);
-        setMessage("Telegram 登入失敗，請稍後再試", "error");
+        const msg = err.response?.data?.error === "telegram_not_bound"
+          ? "尚未綁定 Telegram，請先帳密登入後綁定"
+          : "Telegram 登入失敗，請稍後再試";
+        setMessage(msg, "error");
       }
     };
 

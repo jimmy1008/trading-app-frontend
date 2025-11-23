@@ -450,8 +450,15 @@
     setRange(1);
   })();
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" data-cache-bust="true"></script>
   <script type="module">
-    import { apiGet, apiPost } from "./js/api.js";
+    import { apiGet, apiPost, API_BASE } from "./js/api.js";
+
+    const token = localStorage.getItem("token");
+    const authUser = JSON.parse(localStorage.getItem("authUser") || "null");
+    if (!token || !authUser) {
+      window.location.href = "login.html";
+    }
 
     (function persistTokenFromQuery() {
       const params = new URLSearchParams(window.location.search);
@@ -467,7 +474,14 @@
     })();
 
     const navEmail = document.getElementById('nav-email');
+    const googleStatus = document.getElementById('profile-google-status');
+    const googleStatusAccount = document.getElementById('profile-google-account');
+    const bindGoogleBtn = document.getElementById('profile-google');
+    const tgStatus = document.getElementById('profile-tg-status');
+    const tgStatusAccount = document.getElementById('profile-tg-account');
+    const bindTgBtn = document.getElementById('profile-tg');
     const logoutBtn = document.getElementById('nav-logout');
+    const profileLogoutBtn = document.getElementById('profile-logout');
 
     function performLogout() {
       localStorage.removeItem('token');
@@ -476,7 +490,6 @@
     }
 
     async function loadCurrentUser() {
-      const token = localStorage.getItem('token');
       if (!token) {
         performLogout();
         return;
@@ -489,7 +502,21 @@
         stored.email = data.email;
         stored.uid = stored.uid || data.id;
         stored.googleId = data.google_id;
+        stored.google_sub = data.google_sub || stored.google_sub;
+        stored.telegram_sub = data.telegram_sub || stored.telegram_sub;
         localStorage.setItem('authUser', JSON.stringify(stored));
+        if (googleStatus) {
+          const bound = stored.google_sub;
+          googleStatus.textContent = bound ? "已綁定" : "未綁定";
+          googleStatus.classList.remove("hidden");
+          if (googleStatusAccount) googleStatusAccount.textContent = stored.email || "";
+        }
+        if (tgStatus) {
+          const bound = stored.telegram_sub;
+          tgStatus.textContent = bound ? "已綁定" : "未綁定";
+          tgStatus.classList.remove("hidden");
+          if (tgStatusAccount) tgStatusAccount.textContent = stored.telegram_sub ? stored.telegram_sub.replace("telegram:", "") : "";
+        }
       } catch (err) {
         console.error(err);
         performLogout();
@@ -497,7 +524,56 @@
     }
 
     logoutBtn?.addEventListener('click', performLogout);
+    profileLogoutBtn?.addEventListener('click', performLogout);
     loadCurrentUser();
+
+    window.handleGoogleBind = async function handleGoogleBind(response) {
+      try {
+        const credential = response?.credential;
+        if (!credential) throw new Error("missing_credential");
+        const payload = JSON.parse(atob(credential.split('.')[1]));
+        const googleSub = payload.sub;
+        const res = await axios.post(`${API_BASE}/auth/bind/google`, { credential }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        alert("Google 綁定成功");
+        if (authUser) {
+          authUser.google_sub = googleSub || "bound";
+          localStorage.setItem("authUser", JSON.stringify(authUser));
+        }
+        loadCurrentUser();
+      } catch (err) {
+        console.error(err);
+        alert("綁定失敗");
+      }
+    };
+
+    bindGoogleBtn?.addEventListener("click", () => {
+      if (!window.google?.accounts?.id) return;
+      window.google.accounts.id.initialize({
+        client_id: "777320476444-89anlckf3uipogs3h9isg4tkr347ap6u.apps.googleusercontent.com",
+        callback: window.handleGoogleBind
+      });
+      window.google.accounts.id.prompt();
+    });
+
+    window.bindTelegram = function bindTelegram(user) {
+      axios.post(`${API_BASE}/auth/bind/telegram`, user, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(() => {
+        alert("Telegram 綁定成功");
+        if (authUser) {
+          authUser.telegram_sub = `telegram:${user.id}`;
+          localStorage.setItem("authUser", JSON.stringify(authUser));
+        }
+        loadCurrentUser();
+      }).catch(err => {
+        console.error(err);
+        alert("綁定失敗");
+      });
+    };
+
+    // Telegram widget callback is set via data-onauth on widget script in login/profile sections if present
   </script>
 
   <div id="profile-modal" class="fixed inset-0 bg-black/30 hidden z-[90] flex items-center justify-center">
