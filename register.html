@@ -227,6 +227,9 @@
         return;
       }
 
+      registerBtn.disabled = true;
+      const originalText = registerBtn.textContent;
+      registerBtn.textContent = "處理中...";
       try {
         setMessage("註冊中...", "info");
         const data = await apiPostJson("/auth/register", {
@@ -242,7 +245,18 @@
         window.location.href = "index.html";
       } catch (err) {
         console.error(err);
+        const apiError = err?.response?.data?.error;
+        if (apiError === "username_exists") {
+          alert("此帳號已被使用，請換一個帳號");
+        } else if (apiError === "email_exists") {
+          alert("此 Email 已被使用，請換一個 Email");
+        } else {
+          alert("註冊失敗，請稍後再試");
+        }
         setMessage("註冊失敗，請稍後再試", "error");
+      } finally {
+        registerBtn.disabled = false;
+        registerBtn.textContent = originalText;
       }
     });
   </script>

@@ -530,13 +530,16 @@
     window.handleGoogleBind = async function handleGoogleBind(response) {
       try {
         const credential = response?.credential;
-        if (!credential) throw new Error("missing_credential");
+        if (!credential) {
+          alert("Google 認證資料無效，請重新操作");
+          throw new Error("missing_credential");
+        }
         const payload = JSON.parse(atob(credential.split('.')[1]));
         const googleSub = payload.sub;
         const res = await axios.post(`${API_BASE}/auth/bind/google`, { credential }, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        alert("Google 綁定成功");
+        alert("綁定成功！之後可以直接使用 Google / Telegram 登入");
         if (authUser) {
           authUser.google_sub = googleSub || "bound";
           localStorage.setItem("authUser", JSON.stringify(authUser));
@@ -544,7 +547,7 @@
         loadCurrentUser();
       } catch (err) {
         console.error(err);
-        alert("綁定失敗");
+        alert("綁定失敗，請稍後再試");
       }
     };
 
@@ -561,7 +564,7 @@
       axios.post(`${API_BASE}/auth/bind/telegram`, user, {
         headers: { Authorization: `Bearer ${token}` }
       }).then(() => {
-        alert("Telegram 綁定成功");
+        alert("綁定成功！之後可以直接使用 Google / Telegram 登入");
         if (authUser) {
           authUser.telegram_sub = `telegram:${user.id}`;
           localStorage.setItem("authUser", JSON.stringify(authUser));
@@ -569,7 +572,7 @@
         loadCurrentUser();
       }).catch(err => {
         console.error(err);
-        alert("綁定失敗");
+        alert("Telegram 綁定失敗，請稍後再試");
       });
     };
 

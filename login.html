@@ -216,11 +216,17 @@
         return;
       }
       setMessage("登入中...", "info");
+      const btn = document.querySelector(".g_id_signin button") || document.querySelector(".g_id_signin");
+      const originalText = btn?.textContent;
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "正在驗證中…";
+      }
       axios.post(`${API_BASE}/auth/google`, { credential: response.credential })
         .then(res => {
           const { token, user, error } = res.data;
           if (error === "google_not_bound") {
-            alert("尚未綁定，請先帳密登入後綁定 Google");
+            alert("尚未綁定 Google，請先帳密登入後綁定");
             setMessage("尚未綁定 Google，請先帳密登入後綁定", "error");
             return;
           }
@@ -236,7 +242,16 @@
           const msg = err.response?.data?.error === "google_not_bound"
             ? "尚未綁定，請先帳密登入後綁定 Google"
             : "Google 登入失敗，請稍後再試";
+          if (err.response?.data?.error === "google_not_bound") {
+            alert("尚未綁定 Google，請先使用帳號密碼登入後綁定");
+          }
           setMessage(msg, "error");
+        })
+        .finally(() => {
+          if (btn) {
+            btn.disabled = false;
+            if (originalText) btn.textContent = originalText;
+          }
         });
     };
 
@@ -246,7 +261,7 @@
         const data = await apiPostJson("/auth/telegram", user);
         if (data?.error === "telegram_not_bound") {
           setMessage("尚未綁定 Telegram，請先帳密登入後綁定", "error");
-          alert("尚未綁定，請先帳密登入後綁定 Telegram");
+          alert("尚未綁定 Telegram，請先使用帳號密碼登入後綁定");
           return;
         }
         localStorage.setItem("token", data.token);
@@ -258,6 +273,7 @@
           ? "尚未綁定 Telegram，請先帳密登入後綁定"
           : "Telegram 登入失敗，請稍後再試";
         setMessage(msg, "error");
+        alert("Telegram 登入驗證失敗，請稍後再試");
       }
     };
 
